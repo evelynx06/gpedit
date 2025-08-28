@@ -57,13 +57,14 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "editor.tabSize": 3,
-"editor.insertSpaces": false,
-"files.associations": {
+  "editor.insertSpaces": false,
+  "files.associations": {
 	"*.ejs": "html",
 	"*.tab": "songtxt",
 	"*.txt": "plaintext",
 	"iosfwd": "cpp",
 	"iostream": "cpp",
-	"ostream": "cpp"
+	"ostream": "cpp",
+	"cstddef": "cpp"
 }
 }
