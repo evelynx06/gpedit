@@ -59,12 +59,12 @@
   "editor.tabSize": 3,
   "editor.insertSpaces": false,
   "files.associations": {
-	"*.ejs": "html",
-	"*.tab": "songtxt",
-	"*.txt": "plaintext",
-	"iosfwd": "cpp",
-	"iostream": "cpp",
-	"ostream": "cpp",
-	"cstddef": "cpp"
-}
+    "*.ejs": "html",
+    "*.tab": "songtxt",
+    "*.txt": "plaintext",
+    "iosfwd": "cpp",
+    "iostream": "cpp",
+    "ostream": "cpp",
+    "cstddef": "cpp"
+  }
 }
