@@ -135,7 +135,7 @@ struct trackHeader {
 };
 
 struct chord {
-	bool format;		// !! must be 0 for GP3 format !!
+	bool newFormat;		// !! must be 0 for GP3 format !!
 	std::string name;
 	int diagramFirstFret;	// the fret to start diagram at,
 									// if this is 0 there is no diagram, and frets are not read
@@ -446,8 +446,37 @@ class GPFile {
 			
 			beat.duration = gp_read::read_signedbyte(fileStream);
 			
-			// continue
+			if (beat.beatFlags & GP_BEAT_IS_TUPLET) {
+				beat.tupletDivision = gp_read::read_int(fileStream);
+			}
+			
+			if (beat.beatFlags & GP_BEAT_HAS_CHORD) {
+				beat.chordDiagram = readChord(fileStream);
+			}
+			
+			//
 			
 			return beat;
+		}
+		
+		chord readChord(std::ifstream &fileStream) {
+			chord chord;
+			
+			chord.newFormat = gp_read::read_bool(fileStream);
+			if (chord.newFormat) {
+				std::cerr << "Wrong chord diagram format!" << std::endl;
+				return;
+			}
+			
+			chord.name = gp_read::read_intbytestring(fileStream);
+			chord.diagramFirstFret = gp_read::read_int(fileStream);
+				
+			if (chord.diagramFirstFret) {
+				for (int i; i = 0; i < 6) {
+					chord.diagramFrets[i] = gp_read::read_int(fileStream);
+				}
+			}
+			
+			return chord;
 		}
 };
