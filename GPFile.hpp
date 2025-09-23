@@ -302,15 +302,15 @@ class GPFile {
 				this->trackHeaders.push_back(read_track_header(fileStream));
 			}
 			
-			// for (int i = 0; i < this->measureCount; i++) {	// loop through all measures
-			// 	std::vector<Measure> measure;
+			for (int i = 0; i < this->measureCount; i++) {	// loop through all measures
+				std::vector<Measure> measureTracks;
 				
-			// 	for (int j = 0; j < this->trackCount; j++) {	// loop through all tracks for each measure
-			// 		measure.push_back(read_measure(fileStream));
-			// 	}
+				for (int j = 0; j < this->trackCount; j++) {	// for every measure, loop through all tracks
+					measureTracks.push_back(read_measure(fileStream));
+				}
 				
-			// 	this->measures.push_back(measure);
-			// }
+				this->measures.push_back(measureTracks);
+			}
 			
 			return 0;
 		}
@@ -607,7 +607,17 @@ class GPFile {
 		Bend read_bend(std::ifstream &fileStream) {
 			Bend bend;
 			
-			// todo
+			bend.type = (BendType)gp_read::read_signedbyte(fileStream);
+			bend.value = gp_read::read_int(fileStream);
+			bend.pointCount = gp_read::read_int(fileStream);
+			
+			for (int i = 0; i < bend.pointCount; i++) {
+				BendPoint point;
+				point.position = gp_read::read_int(fileStream);
+				point.value = gp_read::read_int(fileStream);
+				point.vibrato = gp_read::read_bool(fileStream);
+				bend.points.push_back(point);
+			}
 			
 			return bend;
 		}
@@ -615,7 +625,10 @@ class GPFile {
 		GraceNote read_grace_note(std::ifstream &fileStream) {
 			GraceNote graceNote;
 			
-			// todo
+			graceNote.fret = gp_read::read_signedbyte(fileStream);
+			graceNote.dynamic = gp_read::read_byte(fileStream);
+			graceNote.duration = gp_read::read_byte(fileStream);
+			graceNote.transition = gp_read::read_byte(fileStream);
 			
 			return graceNote;
 		}
