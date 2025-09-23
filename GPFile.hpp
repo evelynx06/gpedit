@@ -122,6 +122,7 @@ struct MeasureHeader {
 struct TrackHeader {
 	unsigned char trackFlags;	// indicates if the track is one of the special types:
 									// drums, 12 string guitar or banjo
+									
 	std::string name;
 	int stringCount;
 	int stringTuning[7];	// stored from thinnest to thickest
@@ -220,8 +221,9 @@ struct Note {
 
 struct Notes {
 	unsigned char stringsPlayed;	// indicates which strings have associated notes
-	// the LSB represents the thinnest string,
-	// the MSB doesn't represent any string
+	// 0x01 is the thickest string,
+	// 0x40 is the thinnest string,
+	// 0x80 is not a string
 	
 	Note strings[7];	// stored from thinnest to thickest
 };
@@ -321,7 +323,7 @@ class GPFile {
 			fileStream.seekg(30 - this->version.length(), std::ifstream::cur);
 			
 			if (this->version != "FICHIER GUITAR PRO v3.00") {
-				std::cerr << "Incompatible file format '" << this->version << "'" << std::endl;
+				std::cerr << "Incompatible file format '" << this->version << "'\n";
 				return 1;
 			}
 			
@@ -477,8 +479,8 @@ class GPFile {
 			
 			chord.newFormat = gp_read::read_bool(fileStream);
 			if (chord.newFormat) {
-				std::cerr << "Wrong chord diagram format!" << std::endl;
-				return;
+				std::cerr << "Wrong chord diagram format!\n";
+				return chord;
 			}
 			
 			chord.name = gp_read::read_intbytestring(fileStream);
@@ -560,7 +562,7 @@ class GPFile {
 			notes.stringsPlayed = gp_read::read_byte(fileStream);
 			
 			for (int i = 0; i < 7; i++) {
-				if (notes.stringsPlayed & (0x01 << i)) {
+				if (notes.stringsPlayed & (0x40 >> i)) {
 					notes.strings[i] = read_note(fileStream);
 				}
 			}

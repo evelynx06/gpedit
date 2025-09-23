@@ -58,7 +58,7 @@ namespace gp_read
 		int lengthByte = read_byte(fileStream);
 		
 		if (lengthInt != lengthByte + 1) {
-			std::cerr << "Error: Mismatched string lengths in IntByteString.";
+			std::cerr << "Error: Mismatched string lengths in IntByteString.\n";
 			return "";
 		}
 		
