@@ -6,95 +6,95 @@
 
 
 enum MeasureHeaderFlags {
-	GP_MEASURE_KEYSIG_NUMERATOR = 0x01,
-	GP_MEASURE_KEYSIG_DENOMINATOR = 0x02,
-	GP_MEASURE_REPEAT_BEGIN = 0x04,
-	GP_MEASURE_REPEAT_END = 0x08,
-	GP_MEASURE_ALTEND_NUMBER = 0x10,
-	GP_MEASURE_MARKER = 0x20,
-	GP_MEASURE_TONALITY = 0x40,
-	GP_MEASURE_DOUBLE_BAR = 0x80
+	gp_measure_keysig_numerator = 0x01,
+	gp_measure_keysig_denominator = 0x02,
+	gp_measure_repeat_begin = 0x04,
+	gp_measure_repeat_end = 0x08,
+	gp_measure_altend_number = 0x10,
+	gp_measure_marker = 0x20,
+	gp_measure_tonality = 0x40,
+	gp_measure_double_bar = 0x80
 };
 enum TrackHeaderFlags {
-	GP_TRACK_DRUMS = 0x01,
-	GP_TRACK_12_STRING = 0x02,
-	GP_TRACK_BANJO = 0x04,
+	gp_track_drums = 0x01,
+	gp_track_12_string = 0x02,
+	gp_track_banjo = 0x04,
 };
 enum BeatFlags {
-	GP_BEAT_IS_DOTTED = 0x01,
-	GP_BEAT_HAS_CHORD = 0x02,
-	GP_BEAT_HAS_TEXT = 0x04,
-	GP_BEAT_HAS_EFFECTS = 0x08,
-	GP_BEAT_HAS_MIX_CHANGE = 0x10,
-	GP_BEAT_IS_TUPLET = 0x20,
-	GP_BEAT_IS_EMPTY_OR_REST = 0x40,
+	gp_beat_is_dotted = 0x01,
+	gp_beat_has_chord = 0x02,
+	gp_beat_has_text = 0x04,
+	gp_beat_has_effects = 0x08,
+	gp_beat_has_mix_change = 0x10,
+	gp_beat_is_tuplet = 0x20,
+	gp_beat_is_empty_or_rest = 0x40,
 };
 enum BeatEffectFlags {
-	GP_BEAT_FX_VIBRATO = 0x01,
-	GP_BEAT_FX_WIDE_VIBRATO = 0x02,
-	GP_BEAT_FX_NATURAL_HARMONIC = 0x04,
-	GP_BEAT_FX_ARTIFICIAL_HARMONIC = 0x08,
-	GP_BEAT_FX_FADE_IN = 0x10,
-	GP_BEAT_FX_TREMOLO_OR_TAP = 0x20,
-	GP_BEAT_FX_STRUM = 0x40,
+	gp_beat_fx_vibrato = 0x01,
+	gp_beat_fx_wide_vibrato = 0x02,
+	gp_beat_fx_natural_harmonic = 0x04,
+	gp_beat_fx_artificial_harmonic = 0x08,
+	gp_beat_fx_fade_in = 0x10,
+	gp_beat_fx_tremolo_or_tap = 0x20,
+	gp_beat_fx_strum = 0x40,
 };
 enum NoteFlags {
-	GP_NOTE_HAS_INDEPENDENT_DURATION = 0x01,
-	GP_NOTE_IS_HEAVY_ACCENT = 0x02,
-	GP_NOTE_IS_GHOST = 0x04,
-	GP_NOTE_HAS_EFFECTS = 0x08,
-	GP_NOTE_HAS_DYNAMICS = 0x10,
-	GP_NOTE_HAS_FRET = 0x20,
-	GP_NOTE_IS_ACCENT = 0x40,
-	GP_NOTE_HAS_FINGERING = 0x80
+	gp_note_has_independent_duration = 0x01,
+	gp_note_is_heavy_accent = 0x02,
+	gp_note_is_ghost = 0x04,
+	gp_note_has_effects = 0x08,
+	gp_note_has_dynamics = 0x10,
+	gp_note_has_fret = 0x20,
+	gp_note_is_accent = 0x40,
+	gp_note_has_fingering = 0x80
 };
 enum NoteEffectFlags {
-	GP_NOTE_FX_BEND = 0x01,
-	GP_NOTE_FX_HAMMER_PULL = 0x02,
-	GP_NOTE_FX_SLIDE = 0x04,
-	GP_NOTE_FX_LET_RING = 0x08,
-	GP_NOTE_FX_GRACE_NOTE = 0x10
+	gp_note_fx_bend = 0x01,
+	gp_note_fx_hammer_pull = 0x02,
+	gp_note_fx_slide = 0x04,
+	gp_note_fx_let_ring = 0x08,
+	gp_note_fx_grace_note = 0x10
 };
 
 enum NoteDuration {
-	GP_DURATION_WHOLE = -2,
-	GP_DURATION_HALF = -1,
-	GP_DURATION_QUARTER = 0,
-	GP_DURATION_EIGHTH = 1,
-	GP_DURATION_SIXTEENTH = 2,
-	GP_DURATION_THIRTY_SECOND = 3,
-	GP_DURATION_SIXTY_FOURTH = 4
+	gp_duration_whole = -2,
+	gp_duration_half = -1,
+	gp_duration_quarter = 0,
+	gp_duration_eighth = 1,
+	gp_duration_sixteenth = 2,
+	gp_duration_thirty_second = 3,
+	gp_duration_sixty_fourth = 4
 };
 enum StrumSpeed {
-	GP_STRUM_NONE = 0,
-	GP_STRUM_HUNDRED_TWENTY_EIGHTH = 1,
-	GP_STRUM_SIXTY_FOURTH = 2,
-	GP_STRUM_THIRTY_SECOND = 3,
-	GP_STRUM_SIXTEENTH = 4,
-	GP_STRUM_EIGHTH = 5,
-	GP_STRUM_QUARTER = 6
+	gp_strum_none = 0,
+	gp_strum_hundred_twenty_eighth = 1,
+	gp_strum_sixty_fourth = 2,
+	gp_strum_thirty_second = 3,
+	gp_strum_sixteenth = 4,
+	gp_strum_eighth = 5,
+	gp_strum_quarter = 6
 };
 enum NoteType {
-	GP_NOTE_TYPE_NORMAL = 1,
-	GP_NOTE_TYPE_TIED = 2,
-	GP_NOTE_TYPE_DEAD = 3
+	gp_note_type_normal = 1,
+	gp_note_type_tied = 2,
+	gp_note_type_dead = 3
 };
 enum BendType {
-	GP_BEND_TYPE_NONE = 0,
-	GP_BEND_TYPE_BEND = 1,
-	GP_BEND_TYPE_BEND_RELEASE = 2,
-	GP_BEND_TYPE_BEND_RELEASE_BEND = 3,
-	GP_BEND_TYPE_PREBEND = 4,
-	GP_BEND_TYPE_PREBEND_RELEASE = 5,
-	GP_BEND_TYPE_DIP = 6,
-	GP_BEND_TYPE_DIVE = 7,
-	GP_BEND_TYPE_RELEASE_UP = 8,
-	GP_BEND_TYPE_INVERTED_DIP = 9,
-	GP_BEND_TYPE_RETURN = 10,
-	GP_BEND_TYPE_RELEASE_DOWN = 11
+	gp_bend_type_none = 0,
+	gp_bend_type_bend = 1,
+	gp_bend_type_bend_release = 2,
+	gp_bend_type_bend_release_bend = 3,
+	gp_bend_type_prebend = 4,
+	gp_bend_type_prebend_release = 5,
+	gp_bend_type_dip = 6,
+	gp_bend_type_dive = 7,
+	gp_bend_type_release_up = 8,
+	gp_bend_type_inverted_dip = 9,
+	gp_bend_type_return = 10,
+	gp_bend_type_release_down = 11
 };
 
-struct midiChannel {
+struct MidiChannel {
 	int instrument;
 	unsigned char volume;
 	unsigned char balance;
@@ -106,9 +106,9 @@ struct midiChannel {
 	unsigned char blank2;
 };
 
-struct measureHeader {
+struct MeasureHeader {
 	unsigned char measureFlags;	// indicates what data is present in the measure header
-									// GP_MEASURE_REPEAT_BEGIN and GP_MEASURE_DOUBLE_BAR don't have any associated data
+									// gp_measure_repeat_begin and GP_MEASURE_DOUBLE_BAR don't have any associated data
 	unsigned char keysigNumerator;
 	unsigned char keysigDenominator;
 	unsigned char repeatEnd;	// number of repeats
@@ -119,7 +119,7 @@ struct measureHeader {
 	unsigned char tonalityType;	// key change: key signature type
 };
 
-struct trackHeader {
+struct TrackHeader {
 	unsigned char trackFlags;	// indicates if the track is one of the special types:
 									// drums, 12 string guitar or banjo
 	std::string name;
@@ -134,7 +134,7 @@ struct trackHeader {
 	unsigned char color[4];	// red, green, blue, white (white is always 0)
 };
 
-struct chord {
+struct Chord {
 	bool newFormat;		// !! must be 0 for GP3 format !!
 	std::string name;
 	int diagramFirstFret;	// the fret to start diagram at,
@@ -142,17 +142,17 @@ struct chord {
 	int diagramFrets[6];	// the frets played on each string, -1 means not played
 };
 
-struct beatEffects {
+struct BeatEffects {
 	unsigned char beatEffectFlags;
-	unsigned char tremoloOrTap;	// only if GP_BEAT_FX_TREMOLO_OR_TAP
+	unsigned char tremoloOrTap;	// only if gp_beat_fx_tremolo_or_tap
 										// 0 = tremolo, 1 = tap, 2 = slap, 3 = pop
 	int tremoloValue;	// only if tremoloOrTap == 0
 						// 50 = semitone, 100 = whole tone, 150 = 3 semitones, 200 = 2 whole tones, ...
-	enum StrumSpeed strumDown;	// only if GP_BEAT_FX_STRUM
-	enum StrumSpeed strumUp;	// only if GP_BEAT_FX_STRUM
+	enum StrumSpeed strumDown;	// only if gp_beat_fx_strum
+	enum StrumSpeed strumUp;	// only if gp_beat_fx_strum
 };
 
-struct mixChange {
+struct MixChange {
 	// the new values, -1 if unchanged
 	char instrument;
 	char volume;
@@ -175,76 +175,76 @@ struct mixChange {
 	char tempoDuration;
 };
 
-struct bendPoint {
+struct BendPoint {
 	int position;
 	int value;
 	bool vibrato;
 };
 
-struct bend {
+struct Bend {
 	enum BendType type;
 	int value;
 	int pointCount;
-	std::vector<bendPoint> points;
+	std::vector<BendPoint> points;
 };
 
-struct graceNote {
+struct GraceNote {
 	char fret;
 	unsigned char dynamic;
 	unsigned char transition;
 	unsigned char duration;
 };
 
-struct note {
+struct Note {
 	unsigned char noteFlags;
 	
-	enum NoteType noteType;	// only if GP_NOTE_HAS_FRET
+	enum NoteType noteType;	// only if gp_note_has_fret
 	
-	// only if GP_NOTE_HAS_INDEPENDENT_DURATION
+	// only if gp_note_has_independent_duration
 	enum NoteDuration duration;
 	char tupletDivision;
 	
-	char dynamic; // only if GP_NOTE_HAS_DYNAMICS
-	char fretNumber;	// only if GP_NOTE_HAS_FRET
+	char dynamic; // only if gp_note_has_dynamics
+	char fretNumber;	// only if gp_note_has_fret
 	
-	// only if GP_NOTE_HAS_FINGERING
+	// only if gp_note_has_fingering
 	char leftHandFinger;
 	char rightHandFinger;
 	
 	
-	// only if GP_NOTE_HAS_EFFECTS
+	// only if gp_note_has_effects
 	unsigned char noteEffectFlags;
-	bend noteBend;	// only if GP_NOTE_FX_BEND
-	graceNote grace;	// only if GP_NOTE_FX_GRACE_NOTE
+	Bend noteBend;	// only if gp_note_fx_bend
+	GraceNote grace;	// only if gp_note_fx_grace_note
 };
 
-struct notes {
+struct Notes {
 	unsigned char stringsPlayed;	// indicates which strings have associated notes
 	// the LSB represents the thinnest string,
 	// the MSB doesn't represent any string
 	
-	note strings[7];	// stored from thinnest to thickest
+	Note strings[7];	// stored from thinnest to thickest
 };
 
-struct beat {
+struct Beat {
 	unsigned char beatFlags;		// indicates what data is present in the beat
-									// GP_BEAT_IS_DOTTED doesn't have any associated data
-	bool isRest;	// only if GP_BEAT_IS_EMPTY_OR_REST
+									// gp_beat_is_dotted doesn't have any associated data
+	bool isRest;	// only if gp_beat_is_empty_or_rest
 	enum NoteDuration duration;
-	int tupletDivision;	// only if GP_BEAT_IS_TUPLET
-	chord chordDiagram;	// only if GP_BEAT_HAS_CHORD
-	std::string text;	// only if GP_BEAT_HAS_TEXT
+	int tupletDivision;	// only if gp_beat_is_tuplet
+	Chord chordDiagram;	// only if gp_beat_has_chord
+	std::string text;	// only if gp_beat_has_text
 	
-	// only if GP_BEAT_HAS_EFFECTS
-	beatEffects effects;
+	// only if gp_beat_has_effects
+	BeatEffects effects;
 
-	mixChange mixTableChange;	// only if GP_BEAT_HAS_MIX_CHANGE
-	notes beatNotes;
+	MixChange mixTableChange;	// only if gp_beat_has_mix_change
+	Notes beatNotes;
 };
 
-struct measure {
+struct Measure {
 	int beatCount;
-	std::vector<beat> beats;
+	std::vector<Beat> beats;
 };
 
 
@@ -268,45 +268,45 @@ class GPFile {
 		int tempo;
 		int key;	// key signature represented as the number of sharps or flats (negative numbers for flats)
 		
-		midiChannel midiChannels[4][16];
+		MidiChannel midiChannels[4][16];
 		
 		int measureCount;
 		int trackCount;
 		
-		std::vector<measureHeader> measureHeaders;
-		std::vector<trackHeader> trackHeaders;
+		std::vector<MeasureHeader> measureHeaders;
+		std::vector<TrackHeader> trackHeaders;
 		
-		std::vector<std::vector<measure>> measures;	// measures[measureCount][trackCount]
+		std::vector<std::vector<Measure>> measures;	// measures[measureCount][trackCount]
 		
 		// GPFile() {
 			
 		// }
 		
-		int readSong(std::ifstream &fileStream) {
-			readVersion(fileStream);
-			readMetadata(fileStream);
+		int read_song(std::ifstream &fileStream) {
+			read_version(fileStream);
+			read_metadata(fileStream);
 			
 			this->tripletFeel = gp_read::read_bool(fileStream);
 			this->tempo = gp_read::read_int(fileStream);
 			this->key = gp_read::read_int(fileStream);
 			
-			readMidiChannels(fileStream);
+			read_midi_channels(fileStream);
 			
 			this->measureCount = gp_read::read_int(fileStream);
 			this->trackCount = gp_read::read_int(fileStream);
 			
 			for (int i = 0; i < this->measureCount; i++) {
-				this->measureHeaders.push_back(readMeasureHeader(fileStream));
+				this->measureHeaders.push_back(read_measure_header(fileStream));
 			}
 			for (int i = 0; i < this->trackCount; i++) {
-				this->trackHeaders.push_back(readTrackHeader(fileStream));
+				this->trackHeaders.push_back(read_track_header(fileStream));
 			}
 			
 			// for (int i = 0; i < this->measureCount; i++) {	// loop through all measures
-			// 	std::vector<measure> measure;
+			// 	std::vector<Measure> measure;
 				
 			// 	for (int j = 0; j < this->trackCount; j++) {	// loop through all tracks for each measure
-			// 		measure.push_back(readMeasure(fileStream));
+			// 		measure.push_back(read_measure(fileStream));
 			// 	}
 				
 			// 	this->measures.push_back(measure);
@@ -316,7 +316,7 @@ class GPFile {
 		}
 		
 		
-		int readVersion(std::ifstream &fileStream) {
+		int read_version(std::ifstream &fileStream) {
 			this->version = gp_read::read_bytestring(fileStream);
 			fileStream.seekg(30 - this->version.length(), std::ifstream::cur);
 			
@@ -328,7 +328,7 @@ class GPFile {
 			return 0;
 		}
 		
-		int readMetadata(std::ifstream &fileStream) {
+		int read_metadata(std::ifstream &fileStream) {
 			this->metadata.title = gp_read::read_intbytestring(fileStream);
 			this->metadata.subtitle = gp_read::read_intbytestring(fileStream);
 			this->metadata.artist = gp_read::read_intbytestring(fileStream);
@@ -346,7 +346,7 @@ class GPFile {
 			return 0;
 		}
 		
-		int readMidiChannels(std::ifstream &fileStream) {
+		int read_midi_channels(std::ifstream &fileStream) {
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 16; j++) {
 					this->midiChannels[i][j] = {
@@ -366,30 +366,30 @@ class GPFile {
 			return 0;
 		}
 		
-		measureHeader readMeasureHeader(std::ifstream &fileStream) {
-			measureHeader measure;
+		MeasureHeader read_measure_header(std::ifstream &fileStream) {
+			MeasureHeader measure;
 			measure.measureFlags = gp_read::read_byte(fileStream);
 			
-			if (measure.measureFlags & GP_MEASURE_KEYSIG_NUMERATOR) {
+			if (measure.measureFlags & gp_measure_keysig_numerator) {
 				measure.keysigNumerator = gp_read::read_byte(fileStream);
 			}
-			if (measure.measureFlags & GP_MEASURE_KEYSIG_DENOMINATOR) {
+			if (measure.measureFlags & gp_measure_keysig_denominator) {
 				measure.keysigDenominator = gp_read::read_byte(fileStream);
 			}
-			if (measure.measureFlags & GP_MEASURE_REPEAT_END) {
+			if (measure.measureFlags & gp_measure_repeat_end) {
 				measure.repeatEnd = gp_read::read_byte(fileStream);
 			}
-			if (measure.measureFlags & GP_MEASURE_ALTEND_NUMBER) {
+			if (measure.measureFlags & gp_measure_altend_number) {
 				measure.altendNumber = gp_read::read_byte(fileStream);
 			}
-			if (measure.measureFlags & GP_MEASURE_MARKER) {
+			if (measure.measureFlags & gp_measure_marker) {
 				measure.markerName = gp_read::read_intbytestring(fileStream);
 				measure.markerColor[0] = gp_read::read_byte(fileStream);	// red
 				measure.markerColor[1] = gp_read::read_byte(fileStream);	// green
 				measure.markerColor[2] = gp_read::read_byte(fileStream);	// blue
 				measure.markerColor[3] = gp_read::read_byte(fileStream);	// white (always 0)
 			}
-			if (measure.measureFlags & GP_MEASURE_TONALITY) {
+			if (measure.measureFlags & gp_measure_tonality) {
 				measure.tonalityRoot = gp_read::read_byte(fileStream);
 				measure.tonalityType = gp_read::read_byte(fileStream);
 			}
@@ -397,8 +397,8 @@ class GPFile {
 			return measure;
 		}
 		
-		trackHeader readTrackHeader(std::ifstream &fileStream) {
-			trackHeader track;
+		TrackHeader read_track_header(std::ifstream &fileStream) {
+			TrackHeader track;
 			track.trackFlags = gp_read::read_byte(fileStream);
 			
 			track.name = gp_read::read_bytestring(fileStream);
@@ -424,56 +424,56 @@ class GPFile {
 			return track;
 		}
 		
-		measure readMeasure(std::ifstream &fileStream) {
-			measure measure;
+		Measure read_measure(std::ifstream &fileStream) {
+			Measure measure;
 			
 			measure.beatCount = gp_read::read_int(fileStream);
 			
 			for (int i = 0; i < measure.beatCount; i++) {
-				measure.beats.push_back(readBeat(fileStream));
+				measure.beats.push_back(read_beat(fileStream));
 			}
 			
 			return measure;
 		}
 		
-		beat readBeat(std::ifstream &fileStream) {
-			beat beat;
+		Beat read_beat(std::ifstream &fileStream) {
+			Beat beat;
 			
 			beat.beatFlags = gp_read::read_byte(fileStream);
 			
-			if (beat.beatFlags & GP_BEAT_IS_EMPTY_OR_REST) {
+			if (beat.beatFlags & gp_beat_is_empty_or_rest) {
 				beat.isRest = gp_read::read_bool(fileStream);
 			}
 			
 			beat.duration = (NoteDuration)gp_read::read_signedbyte(fileStream);
 			
-			if (beat.beatFlags & GP_BEAT_IS_TUPLET) {
+			if (beat.beatFlags & gp_beat_is_tuplet) {
 				beat.tupletDivision = gp_read::read_int(fileStream);
 			}
 			
-			if (beat.beatFlags & GP_BEAT_HAS_CHORD) {
-				beat.chordDiagram = readChord(fileStream);
+			if (beat.beatFlags & gp_beat_has_chord) {
+				beat.chordDiagram = read_chord(fileStream);
 			}
 			
-			if (beat.beatFlags & GP_BEAT_HAS_TEXT) {
+			if (beat.beatFlags & gp_beat_has_text) {
 				beat.text = gp_read::read_intbytestring(fileStream);
 			}
 			
-			if (beat.beatFlags & GP_BEAT_HAS_EFFECTS) {
-				beat.effects = readBeatEffects(fileStream);
+			if (beat.beatFlags & gp_beat_has_effects) {
+				beat.effects = read_beat_effects(fileStream);
 			}
 			
-			if (beat.beatFlags & GP_BEAT_HAS_MIX_CHANGE) {
-				beat.mixTableChange = readMixChange(fileStream);
+			if (beat.beatFlags & gp_beat_has_mix_change) {
+				beat.mixTableChange = read_mix_change(fileStream);
 			}
 			
-			beat.beatNotes = readNotes(fileStream);
+			beat.beatNotes = read_notes(fileStream);
 			
 			return beat;
 		}
 		
-		chord readChord(std::ifstream &fileStream) {
-			chord chord;
+		Chord read_chord(std::ifstream &fileStream) {
+			Chord chord;
 			
 			chord.newFormat = gp_read::read_bool(fileStream);
 			if (chord.newFormat) {
@@ -493,12 +493,12 @@ class GPFile {
 			return chord;
 		}
 		
-		beatEffects readBeatEffects(std::ifstream &fileStream) {
-			beatEffects effects;
+		BeatEffects read_beat_effects(std::ifstream &fileStream) {
+			BeatEffects effects;
 			
 			effects.beatEffectFlags = gp_read::read_byte(fileStream);
 			
-			if (effects.beatEffectFlags & GP_BEAT_FX_TREMOLO_OR_TAP) {
+			if (effects.beatEffectFlags & gp_beat_fx_tremolo_or_tap) {
 				effects.tremoloOrTap = gp_read::read_byte(fileStream);
 				
 				if (effects.tremoloOrTap == 0) {
@@ -506,7 +506,7 @@ class GPFile {
 				}
 			}
 			
-			if (effects.beatEffectFlags & GP_BEAT_FX_STRUM) {
+			if (effects.beatEffectFlags & gp_beat_fx_strum) {
 				effects.strumDown = (StrumSpeed)gp_read::read_signedbyte(fileStream);
 				effects.strumUp = (StrumSpeed)gp_read::read_signedbyte(fileStream);
 			}
@@ -514,8 +514,8 @@ class GPFile {
 			return effects;
 		}
 		
-		mixChange readMixChange(std::ifstream &fileStream) {
-			mixChange change;
+		MixChange read_mix_change(std::ifstream &fileStream) {
+			MixChange change;
 			
 			change.instrument = gp_read::read_signedbyte(fileStream);
 			change.volume = gp_read::read_signedbyte(fileStream);
@@ -554,66 +554,66 @@ class GPFile {
 			return change;
 		}
 		
-		notes readNotes(std::ifstream &fileStream) {
-			notes notes;
+		Notes read_notes(std::ifstream &fileStream) {
+			Notes notes;
 			
 			notes.stringsPlayed = gp_read::read_byte(fileStream);
 			
 			for (int i = 0; i < 7; i++) {
 				if (notes.stringsPlayed & (0x01 << i)) {
-					notes.strings[i] = readNote(fileStream);
+					notes.strings[i] = read_note(fileStream);
 				}
 			}
 			
 			return notes;
 		}
 		
-		note readNote(std::ifstream &fileStream) {
-			note note;
+		Note read_note(std::ifstream &fileStream) {
+			Note note;
 			
 			note.noteFlags = gp_read::read_byte(fileStream);
 			
-			if (note.noteFlags & GP_NOTE_HAS_FRET) {
+			if (note.noteFlags & gp_note_has_fret) {
 				note.noteType = (NoteType)gp_read::read_byte(fileStream);
 			}
-			if (note.noteFlags & GP_NOTE_HAS_INDEPENDENT_DURATION) {
+			if (note.noteFlags & gp_note_has_independent_duration) {
 				note.duration = (NoteDuration)gp_read::read_signedbyte(fileStream);
 				note.tupletDivision = gp_read::read_signedbyte(fileStream);
 			}
-			if (note.noteFlags & GP_NOTE_HAS_DYNAMICS) {
+			if (note.noteFlags & gp_note_has_dynamics) {
 				note.dynamic = gp_read::read_signedbyte(fileStream);
 			}
-			if (note.noteFlags & GP_NOTE_HAS_FRET) {
+			if (note.noteFlags & gp_note_has_fret) {
 				note.fretNumber = gp_read::read_signedbyte(fileStream);
 			}
-			if (note.noteFlags & GP_NOTE_HAS_FINGERING) {
+			if (note.noteFlags & gp_note_has_fingering) {
 				note.leftHandFinger = gp_read::read_signedbyte(fileStream);
 				note.rightHandFinger = gp_read::read_signedbyte(fileStream);
 			}
-			if (note.noteFlags & GP_NOTE_HAS_EFFECTS) {
+			if (note.noteFlags & gp_note_has_effects) {
 				note.noteEffectFlags = gp_read::read_byte(fileStream);
 				
-				if (note.noteEffectFlags & GP_NOTE_FX_BEND) {
-					note.noteBend = readBend(fileStream);
+				if (note.noteEffectFlags & gp_note_fx_bend) {
+					note.noteBend = read_bend(fileStream);
 				}
-				if (note.noteEffectFlags & GP_NOTE_FX_GRACE_NOTE) {
-					note.grace = readGraceNote(fileStream);
+				if (note.noteEffectFlags & gp_note_fx_grace_note) {
+					note.grace = read_grace_note(fileStream);
 				}
 			}
 			
 			return note;
 		}
 		
-		bend readBend(std::ifstream &fileStream) {
-			bend bend;
+		Bend read_bend(std::ifstream &fileStream) {
+			Bend bend;
 			
 			// todo
 			
 			return bend;
 		}
 
-		graceNote readGraceNote(std::ifstream &fileStream) {
-			graceNote graceNote;
+		GraceNote read_grace_note(std::ifstream &fileStream) {
+			GraceNote graceNote;
 			
 			// todo
 			
