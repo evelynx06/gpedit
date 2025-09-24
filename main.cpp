@@ -40,17 +40,20 @@ int main(int argc, char const *argv[]) {
 	curs_set(0);
 	
 	
+	// display song metadata
 	WINDOW* songInfo = songInfoWindow(filePath.substr(filePath.find_last_of("/\\") + 1), song);
 	refresh();
 	wrefresh(songInfo);
 	
+	// let the user select which track to edit
 	int trackIndex = selectTrack(getmaxy(songInfo), 0, song);
 	
+	// start editing
 	editTab(getmaxy(songInfo), 0, trackIndex, song);
 
-	// wait for keypress
-	getch();
 	
+	// wait for keypress
+	getch();	
 	
 	/* NCURSES END */
 	endwin();
