@@ -280,9 +280,9 @@ class GPFile {
 		
 		std::vector<std::vector<Measure>> measures;	// measures[measureCount][trackCount]
 		
-		// GPFile() {
-			
-		// }
+		GPFile() { }
+		
+		GPFile(std::ifstream &fileStream) { read_song(fileStream); }
 		
 		int read_song(std::ifstream &fileStream) {
 			read_version(fileStream);

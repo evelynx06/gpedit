@@ -1,7 +1,4 @@
 all: gpedit
 
 gpedit: main.cpp
-	g++ main.cpp -o gpedit
-
-run: all
-	./gpedit
+	g++ main.cpp -lncurses -o ./build/gpedit
