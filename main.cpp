@@ -7,6 +7,7 @@
 WINDOW* songInfoWindow(std::string songFileName, GPFile song);
 int selectTrack(int yTop, int xLeft, GPFile song);
 int editTab(int yTop, int xLeft, int trackIndex, GPFile& song);
+std::string getStringName(int tuningValue);
 
 
 int main(int argc, char const *argv[]) {
@@ -154,14 +155,36 @@ int selectTrack(int yTop, int xLeft, GPFile song) {
 }
 
 int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
+	TrackHeader track = song.trackHeaders[trackIndex];
+	
+	
+	// create window with border and title
 	WINDOW* tabDisplay = newwin(15, getmaxx(stdscr), yTop, xLeft);
 	box(tabDisplay, 0, 0);
-	
 	wattron(tabDisplay, A_REVERSE);
-	wprintw(tabDisplay, "Track: %s", song.trackHeaders[trackIndex].name.c_str());
+	wprintw(tabDisplay, "Track: %s", track.name.c_str());
 	wattroff(tabDisplay, A_REVERSE);
+	
+	// print string names
+	for (int i = 0; i < track.stringCount; i++) {
+		mvwprintw(tabDisplay, i+1, 1, getStringName(track.stringTuning[i]).c_str());
+		mvwprintw(tabDisplay, i+1, 4, "|-");
+	}
+
 	
 	refresh();
 	wrefresh(tabDisplay);
 	return 0;
+}
+
+
+// the string tuning value is stored as an integer corresponding to its MIDI note value
+// the MIDI note value represents the number of semitones above the lowest note, C(-1)
+std::string getStringName(int tuningValue) {
+	std::string noteNames[] = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+	
+	int noteIndex = tuningValue % 12;
+	int octave = (tuningValue / 12) - 1;
+	
+	return noteNames[noteIndex] + std::to_string(octave);
 }
