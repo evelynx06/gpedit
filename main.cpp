@@ -27,13 +27,13 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 
 
 int main(int argc, char const *argv[]) {
-	// if (argc != 2) {
-	// 	std::cerr << "Invalid arguments.\n\nUsage: gpedit FILE\n";
-	// 	return 1;
-	// }
+	if (argc != 2) {
+		std::cerr << "Invalid arguments.\n\nUsage: gpedit FILE\n";
+		return 1;
+	}
 	
 	// open file
-	std::string filePath = "C:/Users/Evelyn/Documents/Untitled.gp3";//argv[1];
+	std::string filePath = argv[1];
 	std::ifstream fileStream(filePath, std::ios::in|std::ios::binary);
 	if (!fileStream) {
 		std::cerr << "Error opening file.\n";

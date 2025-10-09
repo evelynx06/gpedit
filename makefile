@@ -7,4 +7,4 @@ endif
 all: gpedit
 
 gpedit: main.cpp
-	g++ -g main.cpp -l$(curseslib) -o ./build/gpedit
+	g++ main.cpp -l$(curseslib) -o ./build/gpedit
