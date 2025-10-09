@@ -171,11 +171,6 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	
 	printBeats(tabDisplay, song, trackIndex, 0, 0);
 	
-	// mvwprintw(tabDisplay, 10, 1, "beatIndex: %d  ", beatIndex);
-	// mvwprintw(tabDisplay, 11, 1, "printOffset: %d  ", beatStart);
-	// mvwprintw(tabDisplay, 12, 1, "measureIndex: %d  ", measureIndex);
-	
-	// wrefresh(tabDisplay);
 	return 0;
 }
 
@@ -200,11 +195,21 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 	int bottomMargin = 1;
 	
 	// print string names
-	for (int i = 0; i < track.stringCount; i++) {
-		mvwprintw(tabDisplay, i+topMargin, leftMargin, getStringName(track.stringTuning[i]).c_str());
-		mvwprintw(tabDisplay, i+topMargin, 4, "|-");
+	std::string stringBeginning;
+	if (startingBeat != 0) {
+		stringBeginning = ":-";
 	}
-	leftMargin += 5;
+	else if (startingMeasure != 0) {
+		stringBeginning = ":|-";
+	}
+	else {
+		stringBeginning = "|-";
+	}
+	for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
+		mvwprintw(tabDisplay, stringIndex+topMargin, leftMargin, getStringName(track.stringTuning[stringIndex]).c_str());
+		mvwprintw(tabDisplay, stringIndex+topMargin, 4, stringBeginning.c_str());
+	}
+	leftMargin = getcurx(tabDisplay);
 	
 	int xMax = getmaxx(tabDisplay) - rightMargin;
 	
@@ -259,7 +264,6 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 		
 		int maxBeatWidth = 0;	// keeps track of the maximum printed width of the beat
 		int beatWidth;	// printed beat width of current string
-		// int stringsBeatWidth[track.stringCount];	// keeps track of the printed width of the beat for each string
 		
 		for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {	// loop through the strings
 			// set cursor position to start of beat, on current string
