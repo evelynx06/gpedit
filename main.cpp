@@ -66,11 +66,12 @@ int main(int argc, char const *argv[]) {
 	int trackIndex = selectTrack(getmaxy(songInfo), 0, song);
 	
 	// start editing
-	editTab(getmaxy(songInfo), 0, trackIndex, song);
-
-	
-	// wait for keypress
-	getch();	
+	while (editTab(getmaxy(songInfo), 0, trackIndex, song) == 27) {
+		trackIndex = selectTrack(getmaxy(songInfo), 0, song);
+		if (trackIndex < 0) {
+			break;
+		}
+	}
 	
 	wclear(songInfo);
 	wrefresh(songInfo);
@@ -162,7 +163,7 @@ int selectTrack(int yTop, int xLeft, GPFile song) {
 			default:
 				break;
 		}
-		if (input == 10) {
+		if (input == 10 || input == 27) {
 			break;
 		}
 	}
@@ -172,7 +173,7 @@ int selectTrack(int yTop, int xLeft, GPFile song) {
 	delwin(selectTrack);
 	refresh();
 	
-	return highlight;
+	return input == 27 ? -1 : highlight;
 }
 
 int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
@@ -277,7 +278,7 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 			default:
 				break;
 		}
-		if (input == 10) {
+		if (input == 27) {
 			break;
 		}
 	}
@@ -286,7 +287,7 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	wrefresh(tabDisplay);
 	delwin(tabDisplay);
 	refresh();
-	return 0;
+	return input;
 }
 
 
