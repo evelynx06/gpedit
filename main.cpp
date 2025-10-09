@@ -1,24 +1,34 @@
 #include <iostream>
 #include <fstream>
 #include <ncurses.h>
+#include <vector>
 
 #include "GPFile.hpp"
+
+
+struct DisplayedBeat {
+	int beatOffset;
+	int beatWidth;
+	int measureIndex;
+	int beatIndex;
+};
+
 
 WINDOW* songInfoWindow(std::string songFileName, GPFile song);
 int selectTrack(int yTop, int xLeft, GPFile song);
 int editTab(int yTop, int xLeft, int trackIndex, GPFile& song);
 std::string getStringName(int tuningValue);
-int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeasure, int startingBeat);
+std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeasure, int startingBeat);
 
 
 int main(int argc, char const *argv[]) {
-	if (argc != 2) {
-		std::cerr << "Invalid arguments.\n\nUsage: gpedit FILE\n";
-		return 1;
-	}
+	// if (argc != 2) {
+	// 	std::cerr << "Invalid arguments.\n\nUsage: gpedit FILE\n";
+	// 	return 1;
+	// }
 	
 	// open file
-	std::string filePath = argv[1];
+	std::string filePath = "/home/evelyn/Downloads/test.gp3";//argv[1];
 	std::ifstream fileStream(filePath, std::ios::in|std::ios::binary);
 	if (!fileStream) {
 		std::cerr << "Error opening file.\n";
@@ -56,6 +66,11 @@ int main(int argc, char const *argv[]) {
 	
 	// wait for keypress
 	getch();	
+	
+	wclear(songInfo);
+	wrefresh(songInfo);
+	delwin(songInfo);
+	refresh();
 	
 	/* NCURSES END */
 	endwin();
@@ -144,7 +159,7 @@ int selectTrack(int yTop, int xLeft, GPFile song) {
 		}
 		if (input == 10) {
 			break;
-		}		
+		}
 	}
 	
 	wclear(selectTrack);
@@ -169,8 +184,68 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	refresh();
 	wrefresh(tabDisplay);
 	
-	printBeats(tabDisplay, song, trackIndex, 0, 0);
+	std::vector<DisplayedBeat> displayedBeats;
+	displayedBeats = printBeats(tabDisplay, song, trackIndex, 0, 0);
 	
+	// allow reading non-character keypresses
+	keypad(tabDisplay, true);
+	
+	int input;
+	int selectionIndex = 0;
+	int stringIndex = 0;
+	
+	
+	while (true) {
+		DisplayedBeat selectedBeat = displayedBeats[selectionIndex];
+		
+		char* selection;
+		mvwinnstr(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection, selectedBeat.beatWidth-1);
+		
+		wattron(tabDisplay, A_REVERSE);
+		mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+		wattroff(tabDisplay, A_REVERSE);
+		
+		wrefresh(tabDisplay);
+		
+		input = wgetch(tabDisplay);
+		
+		switch (input) {
+			case KEY_LEFT:
+				if (selectionIndex > 0) {
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					selectionIndex--;
+				}
+				break;
+			case KEY_RIGHT:
+				if (selectionIndex < displayedBeats.size() - 1) {
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					selectionIndex++;
+				}
+				break;
+			case KEY_UP:
+				if (stringIndex > 0) {
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					stringIndex--;
+				}
+				break;
+			case KEY_DOWN:
+				if (stringIndex < track.stringCount - 1) {
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					stringIndex++;
+				}
+				break;
+			default:
+				break;
+		}
+		if (input == 10) {
+			break;
+		}
+	}
+	
+	wclear(tabDisplay);
+	wrefresh(tabDisplay);
+	delwin(tabDisplay);
+	refresh();
 	return 0;
 }
 
@@ -186,7 +261,7 @@ std::string getStringName(int tuningValue) {
 	return noteNames[noteIndex] + std::to_string(octave);
 }
 
-int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeasure = 0, int startingBeat = 0) {
+std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeasure = 0, int startingBeat = 0) {
 	TrackHeader track = song.trackHeaders[trackIndex];
 	
 	int leftMargin = 1;
@@ -219,20 +294,21 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 		mvwprintw(tabDisplay, topMargin+stringIndex, leftMargin, stringBase.c_str());
 	}
 	
+	std::vector<DisplayedBeat> displayedBeats;
 	
 	int measureIndex = startingMeasure;
 	int beatIndex = startingBeat;
 	Measure measure = song.measures[measureIndex][trackIndex];
 	
-	int beatStart = leftMargin;	// the cursor position at the start of the current beat (or other printed section, such as bar lines)
-	wmove(tabDisplay, 0, beatStart);
+	int beatOffset = leftMargin;	// the cursor position at the start of the current beat (or other printed section, such as bar lines)
+	wmove(tabDisplay, 0, beatOffset);
 	
 	// print beats as long as there is room left
 	while (getcurx(tabDisplay)+6 < xMax) {
 		Beat beat = measure.beats[beatIndex];
 		
-		beatStart = getcurx(tabDisplay);
-		
+		beatOffset = getcurx(tabDisplay);
+				
 		std::string beatDuration;
 		switch (beat.duration) {
 			case gp_duration_whole:
@@ -261,16 +337,16 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 			beatDuration.append(".");
 		}
 		if (beat.beatFlags & gp_beat_is_tuplet) {
-			mvwprintw(tabDisplay, topMargin-2, beatStart, std::to_string(beat.tupletDivision).c_str());
+			mvwprintw(tabDisplay, topMargin-2, beatOffset, std::to_string(beat.tupletDivision).c_str());
 		}
-		mvwprintw(tabDisplay, topMargin-1, beatStart, beatDuration.c_str());
+		mvwprintw(tabDisplay, topMargin-1, beatOffset, beatDuration.c_str());
 		
 		int maxBeatWidth = 0;	// keeps track of the maximum printed width of the beat
 		int beatWidth;	// printed beat width of current string
 		
 		for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {	// loop through the strings
 			// set cursor position to start of beat, on current string
-			wmove(tabDisplay, topMargin+stringIndex, beatStart);
+			wmove(tabDisplay, topMargin+stringIndex, beatOffset);
 			beatWidth = 1;
 			
 			if (beat.beatNotes.stringsPlayed & (0x40 >> stringIndex)) {	// check if string is played
@@ -307,19 +383,22 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 			maxBeatWidth = beatWidth > maxBeatWidth ? beatWidth : maxBeatWidth;
 		}
 		
-		wmove(tabDisplay, 0, beatStart+maxBeatWidth);
+				
+		displayedBeats.push_back(DisplayedBeat{ beatOffset, maxBeatWidth, measureIndex, beatIndex });
+		
+		wmove(tabDisplay, 0, beatOffset+maxBeatWidth);
 		
 		if (beatIndex+1 >= measure.beatCount) {	// check if end of measure reached	
 			if (measureIndex+1 >= song.measureCount) {	// check if end of song reached
 				// clear the rest of the tab area
-				beatStart = getcurx(tabDisplay);
+				beatOffset = getcurx(tabDisplay);
 				std::string clearString = "|";
-				clearString.append(std::string(xMax-beatStart, ' '));
+				clearString.append(std::string(xMax-beatOffset, ' '));
 				for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-					mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, clearString.c_str());
+					mvwprintw(tabDisplay, topMargin+stringIndex, beatOffset, clearString.c_str());
 				}
 				wrefresh(tabDisplay);
-				return 0;
+				return displayedBeats;
 			}
 			
 			beatIndex = 0;
@@ -329,9 +408,9 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 			measure = song.measures[measureIndex][trackIndex];
 			
 			// print bar line
-			beatStart = getcurx(tabDisplay);
+			beatOffset = getcurx(tabDisplay);
 			for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-				mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, "|-");
+				mvwprintw(tabDisplay, topMargin+stringIndex, beatOffset, "|-");
 			}
 		}
 		else {
@@ -340,5 +419,5 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 	}
 	
 	wrefresh(tabDisplay);
-	return 0;
+	return displayedBeats;
 }
