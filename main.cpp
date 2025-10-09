@@ -191,7 +191,7 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 	
 	int leftMargin = 1;
 	int rightMargin = 2;
-	int topMargin = 2;
+	int topMargin = 3;
 	int bottomMargin = 1;
 	
 	// print string names
@@ -229,38 +229,41 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 	
 	// print beats as long as there is room left
 	while (getcurx(tabDisplay)+6 < xMax) {
-		if (beatIndex+1 >= measure.beatCount) {	// check if end of measure reached	
-			if (measureIndex+1 >= song.measureCount) {	// check if end of song reached
-				// clear the rest of the tab area
-				beatStart = getcurx(tabDisplay);
-				std::string clearString = "|";
-				clearString.append(std::string(xMax-beatStart, ' '));
-				for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-					mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, clearString.c_str());
-				}
-				wrefresh(tabDisplay);
-				return 0;
-			}
-			
-			beatIndex = 0;
-			measureIndex++;
-			
-			// measure index has changed, so get the new measure object
-			measure = song.measures[measureIndex][trackIndex];
-			
-			// print bar line
-			beatStart = getcurx(tabDisplay);
-			for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-				mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, "|-");
-			}
-		}
-		else {
-			beatIndex++;
-		}
-		// beat index changed, so get the new beat object
 		Beat beat = measure.beats[beatIndex];
 		
 		beatStart = getcurx(tabDisplay);
+		
+		std::string beatDuration;
+		switch (beat.duration) {
+			case gp_duration_whole:
+				beatDuration = "w";
+				break;
+			case gp_duration_half:
+				beatDuration = "h";
+				break;
+			case gp_duration_quarter:
+				beatDuration = "q";
+				break;
+			case gp_duration_eighth:
+				beatDuration = "e";
+				break;
+			case gp_duration_sixteenth:
+				beatDuration = "s";
+				break;
+			case gp_duration_thirty_second:
+				beatDuration = "t";
+				break;
+			case gp_duration_sixty_fourth:
+				beatDuration = "S";
+				break;
+		}
+		if (beat.beatFlags & gp_beat_is_dotted) {
+			beatDuration.append(".");
+		}
+		if (beat.beatFlags & gp_beat_is_tuplet) {
+			mvwprintw(tabDisplay, topMargin-2, beatStart, std::to_string(beat.tupletDivision).c_str());
+		}
+		mvwprintw(tabDisplay, topMargin-1, beatStart, beatDuration.c_str());
 		
 		int maxBeatWidth = 0;	// keeps track of the maximum printed width of the beat
 		int beatWidth;	// printed beat width of current string
@@ -305,6 +308,35 @@ int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeas
 		}
 		
 		wmove(tabDisplay, 0, beatStart+maxBeatWidth);
+		
+		if (beatIndex+1 >= measure.beatCount) {	// check if end of measure reached	
+			if (measureIndex+1 >= song.measureCount) {	// check if end of song reached
+				// clear the rest of the tab area
+				beatStart = getcurx(tabDisplay);
+				std::string clearString = "|";
+				clearString.append(std::string(xMax-beatStart, ' '));
+				for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
+					mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, clearString.c_str());
+				}
+				wrefresh(tabDisplay);
+				return 0;
+			}
+			
+			beatIndex = 0;
+			measureIndex++;
+			
+			// measure index has changed, so get the new measure object
+			measure = song.measures[measureIndex][trackIndex];
+			
+			// print bar line
+			beatStart = getcurx(tabDisplay);
+			for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
+				mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, "|-");
+			}
+		}
+		else {
+			beatIndex++;
+		}
 	}
 	
 	wrefresh(tabDisplay);
