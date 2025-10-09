@@ -1,7 +1,12 @@
 #include <iostream>
 #include <fstream>
-#include <ncurses.h>
 #include <vector>
+
+#ifdef _WIN32
+	#include <curses.h>
+#else
+	#include <ncurses.h>
+#endif
 
 #include "GPFile.hpp"
 
@@ -28,7 +33,7 @@ int main(int argc, char const *argv[]) {
 	// }
 	
 	// open file
-	std::string filePath = "/home/evelyn/Downloads/test.gp3";//argv[1];
+	std::string filePath = "C:/Users/Evelyn/Documents/Untitled.gp3";//argv[1];
 	std::ifstream fileStream(filePath, std::ios::in|std::ios::binary);
 	if (!fileStream) {
 		std::cerr << "Error opening file.\n";
@@ -198,7 +203,7 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	while (true) {
 		DisplayedBeat selectedBeat = displayedBeats[selectionIndex];
 		
-		char* selection;
+		char selection[selectedBeat.beatWidth-1];
 		mvwinnstr(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection, selectedBeat.beatWidth-1);
 		
 		wattron(tabDisplay, A_REVERSE);
