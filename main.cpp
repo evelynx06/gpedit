@@ -189,8 +189,11 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	refresh();
 	wrefresh(tabDisplay);
 	
+	int startingMeasure = 0;
+	int startingBeat = 0;
+	
 	std::vector<DisplayedBeat> displayedBeats;
-	displayedBeats = printBeats(tabDisplay, song, trackIndex, 0, 0);
+	displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, startingBeat);
 	
 	// allow reading non-character keypresses
 	keypad(tabDisplay, true);
@@ -220,11 +223,31 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
 					selectionIndex--;
 				}
+				else if (selectedBeat.beatIndex > 0) {
+					startingBeat--;
+					displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, startingBeat);
+				}
+				else if (selectedBeat.measureIndex > 0) {
+					startingMeasure--;
+					startingBeat = song.measures[startingMeasure][trackIndex].beatCount-1;
+					displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, startingBeat);
+				}
 				break;
 			case KEY_RIGHT:
 				if (selectionIndex < displayedBeats.size() - 1) {
 					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
 					selectionIndex++;
+				}
+				else if (startingBeat < song.measures[startingMeasure][trackIndex].beatCount-1) {
+					startingBeat++;
+					displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, startingBeat);
+					selectionIndex = displayedBeats.size()-1;
+				}
+				else if (startingMeasure < song.measureCount-2) {
+					startingMeasure++;
+					startingBeat = 0;
+					displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, startingBeat);
+					selectionIndex = displayedBeats.size()-1;
 				}
 				break;
 			case KEY_UP:
@@ -237,6 +260,18 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 				if (stringIndex < track.stringCount - 1) {
 					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
 					stringIndex++;
+				}
+				break;
+			case KEY_SLEFT:
+				if (startingMeasure > 0) {
+					startingMeasure--;
+					displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, 0);
+				}
+				break;
+			case KEY_SRIGHT:
+				if (startingMeasure < song.measureCount-2) {
+					startingMeasure++;
+					displayedBeats = printBeats(tabDisplay, song, trackIndex, startingMeasure, 0);
 				}
 				break;
 			default:
@@ -298,6 +333,9 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 	for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
 		mvwprintw(tabDisplay, topMargin+stringIndex, leftMargin, stringBase.c_str());
 	}
+	std::string durationClear = std::string(xMax-leftMargin, ' ');
+	mvwprintw(tabDisplay, topMargin-2, leftMargin-1, durationClear.c_str());
+	mvwprintw(tabDisplay, topMargin-1, leftMargin-1, durationClear.c_str());
 	
 	std::vector<DisplayedBeat> displayedBeats;
 	
