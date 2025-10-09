@@ -75,9 +75,9 @@ enum StrumSpeed {
 	gp_strum_quarter = 6
 };
 enum NoteType {
-	gp_note_type_normal = 1,
-	gp_note_type_tied = 2,
-	gp_note_type_dead = 3
+	gp_notetype_normal = 1,
+	gp_notetype_tied = 2,
+	gp_notetype_dead = 3
 };
 enum BendType {
 	gp_bend_type_none = 0,
@@ -220,10 +220,11 @@ struct Note {
 };
 
 struct Notes {
-	unsigned char stringsPlayed;	// indicates which strings have associated notes
-	// 0x01 is the thickest string,
-	// 0x40 is the thinnest string,
-	// 0x80 is not a string
+	// indicates which strings have associated notes
+	// 0x40 is the thinnest string (index 0)
+	// 0x20 is the next thinnest (index 1)
+	// and so on...
+	unsigned char stringsPlayed;
 	
 	Note strings[7];	// stored from thinnest to thickest
 };

@@ -8,6 +8,7 @@ WINDOW* songInfoWindow(std::string songFileName, GPFile song);
 int selectTrack(int yTop, int xLeft, GPFile song);
 int editTab(int yTop, int xLeft, int trackIndex, GPFile& song);
 std::string getStringName(int tuningValue);
+int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeasure, int startingBeat);
 
 
 int main(int argc, char const *argv[]) {
@@ -165,15 +166,16 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	wprintw(tabDisplay, "Track: %s", track.name.c_str());
 	wattroff(tabDisplay, A_REVERSE);
 	
-	// print string names
-	for (int i = 0; i < track.stringCount; i++) {
-		mvwprintw(tabDisplay, i+1, 1, getStringName(track.stringTuning[i]).c_str());
-		mvwprintw(tabDisplay, i+1, 4, "|-");
-	}
-
-	
 	refresh();
 	wrefresh(tabDisplay);
+	
+	printBeats(tabDisplay, song, trackIndex, 0, 0);
+	
+	// mvwprintw(tabDisplay, 10, 1, "beatIndex: %d  ", beatIndex);
+	// mvwprintw(tabDisplay, 11, 1, "printOffset: %d  ", beatStart);
+	// mvwprintw(tabDisplay, 12, 1, "measureIndex: %d  ", measureIndex);
+	
+	// wrefresh(tabDisplay);
 	return 0;
 }
 
@@ -187,4 +189,120 @@ std::string getStringName(int tuningValue) {
 	int octave = (tuningValue / 12) - 1;
 	
 	return noteNames[noteIndex] + std::to_string(octave);
+}
+
+int printBeats(WINDOW* tabDisplay, GPFile song, int trackIndex, int startingMeasure = 0, int startingBeat = 0) {
+	TrackHeader track = song.trackHeaders[trackIndex];
+	
+	int leftMargin = 1;
+	int rightMargin = 2;
+	int topMargin = 2;
+	int bottomMargin = 1;
+	
+	// print string names
+	for (int i = 0; i < track.stringCount; i++) {
+		mvwprintw(tabDisplay, i+topMargin, leftMargin, getStringName(track.stringTuning[i]).c_str());
+		mvwprintw(tabDisplay, i+topMargin, 4, "|-");
+	}
+	leftMargin += 5;
+	
+	int xMax = getmaxx(tabDisplay) - rightMargin;
+	
+	// print tab base
+	std::string stringBase = std::string(xMax-leftMargin - 1, '-').append(":");
+	for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
+		mvwprintw(tabDisplay, topMargin+stringIndex, leftMargin, stringBase.c_str());
+	}
+	
+	
+	int measureIndex = startingMeasure;
+	int beatIndex = startingBeat;
+	Measure measure = song.measures[measureIndex][trackIndex];
+	
+	int beatStart = leftMargin;	// the cursor position at the start of the current beat (or other printed section, such as bar lines)
+	wmove(tabDisplay, 0, beatStart);
+	
+	// print beats as long as there is room left
+	while (getcurx(tabDisplay)+6 < xMax) {
+		if (beatIndex+1 >= measure.beatCount) {	// check if end of measure reached	
+			if (measureIndex+1 >= song.measureCount) {	// check if end of song reached
+				// clear the rest of the tab area
+				beatStart = getcurx(tabDisplay);
+				std::string clearString = "|";
+				clearString.append(std::string(xMax-beatStart, ' '));
+				for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
+					mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, clearString.c_str());
+				}
+				wrefresh(tabDisplay);
+				return 0;
+			}
+			
+			beatIndex = 0;
+			measureIndex++;
+			
+			// measure index has changed, so get the new measure object
+			measure = song.measures[measureIndex][trackIndex];
+			
+			// print bar line
+			beatStart = getcurx(tabDisplay);
+			for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
+				mvwprintw(tabDisplay, topMargin+stringIndex, beatStart, "|-");
+			}
+		}
+		else {
+			beatIndex++;
+		}
+		// beat index changed, so get the new beat object
+		Beat beat = measure.beats[beatIndex];
+		
+		beatStart = getcurx(tabDisplay);
+		
+		int maxBeatWidth = 0;	// keeps track of the maximum printed width of the beat
+		int beatWidth;	// printed beat width of current string
+		// int stringsBeatWidth[track.stringCount];	// keeps track of the printed width of the beat for each string
+		
+		for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {	// loop through the strings
+			// set cursor position to start of beat, on current string
+			wmove(tabDisplay, topMargin+stringIndex, beatStart);
+			beatWidth = 1;
+			
+			if (beat.beatNotes.stringsPlayed & (0x40 >> stringIndex)) {	// check if string is played
+				Note note = beat.beatNotes.strings[stringIndex];	
+				
+				if (note.noteFlags & gp_note_is_ghost) {
+					wprintw(tabDisplay, "(");
+					beatWidth++;
+				}
+				
+				if (note.noteType == gp_notetype_dead) {
+					wprintw(tabDisplay, "x");
+					beatWidth++;
+				}
+				else if (note.noteType == gp_notetype_tied) {
+					wprintw(tabDisplay, "*");
+					beatWidth++;
+				}
+				else {	// note.noteType = gp_notetype_normal
+					std::string fret = std::to_string(note.fretNumber);
+					wprintw(tabDisplay, fret.c_str());
+					beatWidth += fret.length();
+				}
+				
+				if (note.noteFlags & gp_note_is_ghost) {
+					wprintw(tabDisplay, ")");
+					beatWidth++;
+				}
+			}
+			else {	// string is not played
+				beatWidth++;
+			}
+			
+			maxBeatWidth = beatWidth > maxBeatWidth ? beatWidth : maxBeatWidth;
+		}
+		
+		wmove(tabDisplay, 0, beatStart+maxBeatWidth);
+	}
+	
+	wrefresh(tabDisplay);
+	return 0;
 }
