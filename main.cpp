@@ -179,15 +179,24 @@ int selectTrack(int yTop, int xLeft, GPFile song) {
 int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	TrackHeader track = song.trackHeaders[trackIndex];
 	
+	int tabWindowHeight = 11;
 	
-	// create window with border and title
-	WINDOW* tabDisplay = newwin(15, getmaxx(stdscr), yTop, xLeft);
+	// create tab window
+	WINDOW* tabDisplay = newwin(tabWindowHeight, getmaxx(stdscr), yTop, xLeft);
 	box(tabDisplay, 0, 0);
 	wattron(tabDisplay, A_REVERSE);
 	wprintw(tabDisplay, "Track: %s", track.name.c_str());
 	wattroff(tabDisplay, A_REVERSE);
 	
+	// create beat info window
+	WINDOW* beatInfo = newwin(11, getmaxx(stdscr)/2, yTop+tabWindowHeight, xLeft);
+	box(beatInfo, 0, 0);
+	wattron(beatInfo, A_REVERSE);
+	wprintw(beatInfo, "Beat Info");
+	wattroff(beatInfo, A_REVERSE);
+	
 	refresh();
+	wrefresh(beatInfo);
 	wrefresh(tabDisplay);
 	
 	int startingMeasure = 0;
@@ -214,7 +223,14 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 		mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
 		wattroff(tabDisplay, A_REVERSE);
 		
+		Beat beat = song.measures[selectedBeat.measureIndex][trackIndex].beats[selectedBeat.beatIndex];
+		
+		mvwprintw(beatInfo, 1, 1, "Measure: %d  ", selectedBeat.measureIndex+1);
+		mvwprintw(beatInfo, 2, 1, "Beat: %d  ", selectedBeat.beatIndex+1);
+		mvwprintw(beatInfo, 3, 1, "Rest: %s   ",  beat.isRest ? "Yes" : "No");
+		
 		wrefresh(tabDisplay);
+		wrefresh(beatInfo);
 		
 		input = wgetch(tabDisplay);
 		
@@ -284,8 +300,11 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 	}
 	
 	wclear(tabDisplay);
+	wclear(beatInfo);
 	wrefresh(tabDisplay);
+	wrefresh(beatInfo);
 	delwin(tabDisplay);
+	delwin(beatInfo);
 	refresh();
 	return input;
 }
