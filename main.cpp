@@ -438,6 +438,92 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 					wprintw(tabDisplay, ")");
 					beatWidth++;
 				}
+				
+				if (note.noteFlags & gp_note_is_accent) {
+					wprintw(tabDisplay, ">");
+					beatWidth++;
+				}
+				
+				if (beat.beatFlags & gp_beat_has_effects) {
+					if (beat.effects.beatEffectFlags & gp_beat_fx_vibrato) {
+						wprintw(tabDisplay, "~");
+						beatWidth++;
+					}
+					
+					if (beat.effects.beatEffectFlags & gp_beat_fx_natural_harmonic) {
+						wprintw(tabDisplay, "+");
+						beatWidth++;
+					}
+					
+					if (beat.effects.beatEffectFlags & gp_beat_fx_tremolo_or_tap) {
+						if (beat.effects.tremoloOrTap == 1) {	// tap
+							wprintw(tabDisplay, "t");
+							beatWidth++;
+						}
+					}
+				}
+				
+				if (note.noteFlags & gp_note_has_effects) {
+					if (note.noteEffectFlags & gp_note_fx_bend) {
+						switch (note.noteBend.type) {
+							case gp_bend_type_bend:
+								wprintw(tabDisplay, "b");
+								beatWidth++;
+								break;
+							case gp_bend_type_bend_release:
+								wprintw(tabDisplay, "br");
+								beatWidth += 2;
+								break;
+							case gp_bend_type_bend_release_bend:
+								wprintw(tabDisplay, "brb");
+								beatWidth += 3;
+								break;
+							case gp_bend_type_prebend:
+								wprintw(tabDisplay, "pb");
+								beatWidth += 2;
+								break;
+							case gp_bend_type_prebend_release:
+								wprintw(tabDisplay, "pbr");
+								beatWidth += 3;
+								break;
+						}
+					}
+					
+					if (note.noteEffectFlags & gp_note_fx_hammer_pull) {
+						Note followingNote = measure.beats[beatIndex + 1].beatNotes.strings[stringIndex];
+						
+						if (followingNote.fretNumber < note.fretNumber) {
+							wprintw(tabDisplay, "p");
+						}
+						else {
+							wprintw(tabDisplay, "h");
+						}
+						// beatWidth is not incremented, cause there shouldn't be any space before the next note
+					}
+					
+					if (note.noteEffectFlags & gp_note_fx_slide) {
+						Note followingNote = measure.beats[beatIndex + 1].beatNotes.strings[stringIndex];
+						
+						if (followingNote.fretNumber < note.fretNumber) {
+							wprintw(tabDisplay, "\\");
+						}
+						else {
+							wprintw(tabDisplay, "/");
+						}
+						// beatWidth is not incremented, cause there shouldn't be any space before the next note
+					}
+					
+					if (note.noteEffectFlags & gp_note_fx_let_ring) {
+						// TODO: figure something out
+					}
+					
+					if (note.noteEffectFlags & gp_note_fx_grace_note) {
+						// TODO: figure something out
+						// being a grace note is not a property of a note,
+						// but rather a grace note is attatched to the note it preceeds,
+						// meaning it has to be printed before it
+					}
+				}
 			}
 			else {	// string is not played
 				beatWidth++;
