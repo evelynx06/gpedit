@@ -30,13 +30,13 @@ enum BeatFlags {
 	gp_beat_is_empty_or_rest = 0x40,
 };
 enum BeatEffectFlags {
-	gp_beat_fx_vibrato = 0x01,
-	gp_beat_fx_wide_vibrato = 0x02,
-	gp_beat_fx_natural_harmonic = 0x04,
-	gp_beat_fx_artificial_harmonic = 0x08,
-	gp_beat_fx_fade_in = 0x10,
-	gp_beat_fx_tremolo_or_tap = 0x20,
-	gp_beat_fx_strum = 0x40,
+	gp_beatfx_vibrato = 0x01,
+	gp_beatfx_wide_vibrato = 0x02,
+	gp_beatfx_natural_harmonic = 0x04,
+	gp_beatfx_artificial_harmonic = 0x08,
+	gp_beatfx_fade_in = 0x10,
+	gp_beatfx_tremolo_or_tap = 0x20,
+	gp_beatfx_strum = 0x40,
 };
 enum NoteFlags {
 	gp_note_has_independent_duration = 0x01,
@@ -49,11 +49,11 @@ enum NoteFlags {
 	gp_note_has_fingering = 0x80
 };
 enum NoteEffectFlags {
-	gp_note_fx_bend = 0x01,
-	gp_note_fx_hammer_pull = 0x02,
-	gp_note_fx_slide = 0x04,
-	gp_note_fx_let_ring = 0x08,
-	gp_note_fx_grace_note = 0x10
+	gp_notefx_bend = 0x01,
+	gp_notefx_hammer_pull = 0x02,
+	gp_notefx_slide = 0x04,
+	gp_notefx_let_ring = 0x08,
+	gp_notefx_grace_note = 0x10
 };
 
 enum NoteDuration {
@@ -80,18 +80,19 @@ enum NoteType {
 	gp_notetype_dead = 3
 };
 enum BendType {
-	gp_bend_type_none = 0,
-	gp_bend_type_bend = 1,
-	gp_bend_type_bend_release = 2,
-	gp_bend_type_bend_release_bend = 3,
-	gp_bend_type_prebend = 4,
-	gp_bend_type_prebend_release = 5,
-	gp_bend_type_dip = 6,
-	gp_bend_type_dive = 7,
-	gp_bend_type_release_up = 8,
-	gp_bend_type_inverted_dip = 9,
-	gp_bend_type_return = 10,
-	gp_bend_type_release_down = 11
+	gp_bendtype_none = 0,
+	gp_bendtype_bend = 1,
+	gp_bendtype_bend_release = 2,
+	gp_bendtype_bend_release_bend = 3,
+	gp_bendtype_prebend = 4,
+	gp_bendtype_prebend_release = 5,
+	// following are for tremolo bar only, and actually not part of the gp3 spec
+	gp_bendtype_dip = 6,
+	gp_bendtype_dive = 7,
+	gp_bendtype_release_up = 8,
+	gp_bendtype_inverted_dip = 9,
+	gp_bendtype_return = 10,
+	gp_bendtype_release_down = 11
 };
 
 struct MidiChannel {
@@ -145,12 +146,12 @@ struct Chord {
 
 struct BeatEffects {
 	unsigned char beatEffectFlags;
-	unsigned char tremoloOrTap;	// only if gp_beat_fx_tremolo_or_tap
+	unsigned char tremoloOrTap;	// only if gp_beatfx_tremolo_or_tap
 										// 0 = tremolo, 1 = tap, 2 = slap, 3 = pop
 	int tremoloValue;	// only if tremoloOrTap == 0
 						// 50 = semitone, 100 = whole tone, 150 = 3 semitones, 200 = 2 whole tones, ...
-	enum StrumSpeed strumDown;	// only if gp_beat_fx_strum
-	enum StrumSpeed strumUp;	// only if gp_beat_fx_strum
+	enum StrumSpeed strumDown;	// only if gp_beatfx_strum
+	enum StrumSpeed strumUp;	// only if gp_beatfx_strum
 };
 
 struct MixChange {
@@ -215,8 +216,8 @@ struct Note {
 	
 	// only if gp_note_has_effects
 	unsigned char noteEffectFlags;
-	Bend noteBend;	// only if gp_note_fx_bend
-	GraceNote grace;	// only if gp_note_fx_grace_note
+	Bend noteBend;	// only if gp_notefx_bend
+	GraceNote grace;	// only if gp_notefx_grace_note
 };
 
 struct Notes {
@@ -501,7 +502,7 @@ class GPFile {
 			
 			effects.beatEffectFlags = gp_read::read_byte(fileStream);
 			
-			if (effects.beatEffectFlags & gp_beat_fx_tremolo_or_tap) {
+			if (effects.beatEffectFlags & gp_beatfx_tremolo_or_tap) {
 				effects.tremoloOrTap = gp_read::read_byte(fileStream);
 				
 				if (effects.tremoloOrTap == 0) {
@@ -509,7 +510,7 @@ class GPFile {
 				}
 			}
 			
-			if (effects.beatEffectFlags & gp_beat_fx_strum) {
+			if (effects.beatEffectFlags & gp_beatfx_strum) {
 				effects.strumDown = (StrumSpeed)gp_read::read_signedbyte(fileStream);
 				effects.strumUp = (StrumSpeed)gp_read::read_signedbyte(fileStream);
 			}
@@ -596,10 +597,10 @@ class GPFile {
 			if (note.noteFlags & gp_note_has_effects) {
 				note.noteEffectFlags = gp_read::read_byte(fileStream);
 				
-				if (note.noteEffectFlags & gp_note_fx_bend) {
+				if (note.noteEffectFlags & gp_notefx_bend) {
 					note.noteBend = read_bend(fileStream);
 				}
-				if (note.noteEffectFlags & gp_note_fx_grace_note) {
+				if (note.noteEffectFlags & gp_notefx_grace_note) {
 					note.grace = read_grace_note(fileStream);
 				}
 			}

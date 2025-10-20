@@ -445,17 +445,17 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 				}
 				
 				if (beat.beatFlags & gp_beat_has_effects) {
-					if (beat.effects.beatEffectFlags & gp_beat_fx_vibrato) {
+					if (beat.effects.beatEffectFlags & gp_beatfx_vibrato) {
 						wprintw(tabDisplay, "~");
 						beatWidth++;
 					}
 					
-					if (beat.effects.beatEffectFlags & gp_beat_fx_natural_harmonic) {
+					if (beat.effects.beatEffectFlags & gp_beatfx_natural_harmonic) {
 						wprintw(tabDisplay, "+");
 						beatWidth++;
 					}
 					
-					if (beat.effects.beatEffectFlags & gp_beat_fx_tremolo_or_tap) {
+					if (beat.effects.beatEffectFlags & gp_beatfx_tremolo_or_tap) {
 						if (beat.effects.tremoloOrTap == 1) {	// tap
 							wprintw(tabDisplay, "t");
 							beatWidth++;
@@ -464,32 +464,32 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 				}
 				
 				if (note.noteFlags & gp_note_has_effects) {
-					if (note.noteEffectFlags & gp_note_fx_bend) {
+					if (note.noteEffectFlags & gp_notefx_bend) {
 						switch (note.noteBend.type) {
-							case gp_bend_type_bend:
+							case gp_bendtype_bend:
 								wprintw(tabDisplay, "b");
 								beatWidth++;
 								break;
-							case gp_bend_type_bend_release:
+							case gp_bendtype_bend_release:
 								wprintw(tabDisplay, "br");
 								beatWidth += 2;
 								break;
-							case gp_bend_type_bend_release_bend:
+							case gp_bendtype_bend_release_bend:
 								wprintw(tabDisplay, "brb");
 								beatWidth += 3;
 								break;
-							case gp_bend_type_prebend:
+							case gp_bendtype_prebend:
 								wprintw(tabDisplay, "pb");
 								beatWidth += 2;
 								break;
-							case gp_bend_type_prebend_release:
+							case gp_bendtype_prebend_release:
 								wprintw(tabDisplay, "pbr");
 								beatWidth += 3;
 								break;
 						}
 					}
 					
-					if (note.noteEffectFlags & gp_note_fx_hammer_pull) {
+					if (note.noteEffectFlags & gp_notefx_hammer_pull) {
 						Note followingNote = measure.beats[beatIndex + 1].beatNotes.strings[stringIndex];
 						
 						if (followingNote.fretNumber < note.fretNumber) {
@@ -501,7 +501,7 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 						// beatWidth is not incremented, cause there shouldn't be any space before the next note
 					}
 					
-					if (note.noteEffectFlags & gp_note_fx_slide) {
+					if (note.noteEffectFlags & gp_notefx_slide) {
 						Note followingNote = measure.beats[beatIndex + 1].beatNotes.strings[stringIndex];
 						
 						if (followingNote.fretNumber < note.fretNumber) {
@@ -513,11 +513,11 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 						// beatWidth is not incremented, cause there shouldn't be any space before the next note
 					}
 					
-					if (note.noteEffectFlags & gp_note_fx_let_ring) {
+					if (note.noteEffectFlags & gp_notefx_let_ring) {
 						// TODO: figure something out
 					}
 					
-					if (note.noteEffectFlags & gp_note_fx_grace_note) {
+					if (note.noteEffectFlags & gp_notefx_grace_note) {
 						// TODO: figure something out
 						// being a grace note is not a property of a note,
 						// but rather a grace note is attatched to the note it preceeds,
