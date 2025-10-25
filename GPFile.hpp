@@ -489,7 +489,7 @@ class GPFile {
 			chord.diagramFirstFret = gp_read::read_int(fileStream);
 				
 			if (chord.diagramFirstFret) {
-				for (int i; i = 0; i < 6) {
+				for (int i = 0; i < 6; i++) {
 					chord.diagramFrets[i] = gp_read::read_int(fileStream);
 				}
 			}
