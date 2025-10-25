@@ -93,7 +93,7 @@ WINDOW* songInfoWindow(std::string songFileName, GPFile song) {
 	wattron(songInfo, A_REVERSE);
 	wprintw(songInfo, "File open: ");
 	wattron(songInfo, A_ITALIC);
-	wprintw(songInfo, songFileName.c_str());
+	wprintw(songInfo, "%s", songFileName.c_str());
 	wattroff(songInfo, A_ITALIC);
 	wattroff(songInfo, A_REVERSE);
 	
@@ -107,11 +107,11 @@ WINDOW* songInfoWindow(std::string songFileName, GPFile song) {
 	wattroff(songInfo, A_BOLD);
 	
 	wmove(songInfo, 2, 12);
-	wprintw(songInfo, song.metadata.title.c_str());
+	wprintw(songInfo, "%s", song.metadata.title.c_str());
 	wmove(songInfo, 3, 12);
-	wprintw(songInfo, song.metadata.artist.c_str());
+	wprintw(songInfo, "%s", song.metadata.artist.c_str());
 	wmove(songInfo, 4, 12);
-	wprintw(songInfo, song.metadata.instructions.c_str());
+	wprintw(songInfo, "%s", song.metadata.instructions.c_str());
 	
 	return songInfo;
 }
@@ -143,7 +143,7 @@ int selectTrack(int yTop, int xLeft, GPFile song) {
 			if (i == highlight) {
 				wattron(selectTrack, A_REVERSE);
 			}
-			mvwprintw(selectTrack, i+2, 2, trackList[i].c_str());
+			mvwprintw(selectTrack, i+2, 2, "%s", trackList[i].c_str());
 			wattroff(selectTrack, A_REVERSE);
 		}
 		
@@ -220,7 +220,7 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 		mvwinnstr(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection, selectedBeat.beatWidth-1);
 		
 		wattron(tabDisplay, A_REVERSE);
-		mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+		mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, "%s", selection);
 		wattroff(tabDisplay, A_REVERSE);
 		
 		Beat beat = song.measures[selectedBeat.measureIndex][trackIndex].beats[selectedBeat.beatIndex];
@@ -237,7 +237,7 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 		switch (input) {
 			case KEY_LEFT:
 				if (selectionIndex > 0) {
-					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, "%s", selection);
 					selectionIndex--;
 				}
 				else if (selectedBeat.beatIndex > 0) {
@@ -252,7 +252,7 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 				break;
 			case KEY_RIGHT:
 				if (selectionIndex < displayedBeats.size() - 1) {
-					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, "%s", selection);
 					selectionIndex++;
 				}
 				else if (startingBeat < song.measures[startingMeasure][trackIndex].beatCount-1) {
@@ -269,13 +269,13 @@ int editTab(int yTop, int xLeft, int trackIndex, GPFile& song) {
 				break;
 			case KEY_UP:
 				if (stringIndex > 0) {
-					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, "%s", selection);
 					stringIndex--;
 				}
 				break;
 			case KEY_DOWN:
 				if (stringIndex < track.stringCount - 1) {
-					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, selection);
+					mvwprintw(tabDisplay, stringIndex+3, selectedBeat.beatOffset, "%s", selection);
 					stringIndex++;
 				}
 				break;
@@ -341,8 +341,8 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 		stringBeginning = "|-";
 	}
 	for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-		mvwprintw(tabDisplay, stringIndex+topMargin, leftMargin, getStringName(track.stringTuning[stringIndex]).c_str());
-		mvwprintw(tabDisplay, stringIndex+topMargin, 4, stringBeginning.c_str());
+		mvwprintw(tabDisplay, stringIndex+topMargin, leftMargin, "%s", getStringName(track.stringTuning[stringIndex]).c_str());
+		mvwprintw(tabDisplay, stringIndex+topMargin, 4, "%s", stringBeginning.c_str());
 	}
 	leftMargin = getcurx(tabDisplay);
 	
@@ -351,11 +351,11 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 	// print tab base
 	std::string stringBase = std::string(xMax-leftMargin - 1, '-').append(":");
 	for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-		mvwprintw(tabDisplay, topMargin+stringIndex, leftMargin, stringBase.c_str());
+		mvwprintw(tabDisplay, topMargin+stringIndex, leftMargin, "%s", stringBase.c_str());
 	}
 	std::string durationClear = std::string(xMax-leftMargin, ' ');
-	mvwprintw(tabDisplay, topMargin-2, leftMargin-1, durationClear.c_str());
-	mvwprintw(tabDisplay, topMargin-1, leftMargin-1, durationClear.c_str());
+	mvwprintw(tabDisplay, topMargin-2, leftMargin-1, "%s", durationClear.c_str());
+	mvwprintw(tabDisplay, topMargin-1, leftMargin-1, "%s", durationClear.c_str());
 	
 	std::vector<DisplayedBeat> displayedBeats;
 	
@@ -400,9 +400,9 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 			beatDuration.append(".");
 		}
 		if (beat.beatFlags & gp_beat_is_tuplet) {
-			mvwprintw(tabDisplay, topMargin-2, beatOffset, std::to_string(beat.tupletDivision).c_str());
+			mvwprintw(tabDisplay, topMargin-2, beatOffset, "%s", std::to_string(beat.tupletDivision).c_str());
 		}
-		mvwprintw(tabDisplay, topMargin-1, beatOffset, beatDuration.c_str());
+		mvwprintw(tabDisplay, topMargin-1, beatOffset, "%s", beatDuration.c_str());
 		
 		int maxBeatWidth = 0;	// keeps track of the maximum printed width of the beat
 		int beatWidth;	// printed beat width of current string
@@ -430,7 +430,7 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 				}
 				else {	// note.noteType = gp_notetype_normal
 					std::string fret = std::to_string(note.fretNumber);
-					wprintw(tabDisplay, fret.c_str());
+					wprintw(tabDisplay, "%s", fret.c_str());
 					beatWidth += fret.length();
 				}
 				
@@ -485,6 +485,8 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 							case gp_bendtype_prebend_release:
 								wprintw(tabDisplay, "pbr");
 								beatWidth += 3;
+								break;
+							default:
 								break;
 						}
 					}
@@ -544,7 +546,7 @@ std::vector<DisplayedBeat> printBeats(WINDOW* tabDisplay, GPFile song, int track
 				std::string clearString = "|";
 				clearString.append(std::string(xMax-beatOffset, ' '));
 				for (int stringIndex = 0; stringIndex < track.stringCount; stringIndex++) {
-					mvwprintw(tabDisplay, topMargin+stringIndex, beatOffset, clearString.c_str());
+					mvwprintw(tabDisplay, topMargin+stringIndex, beatOffset, "%s", clearString.c_str());
 				}
 				wrefresh(tabDisplay);
 				return displayedBeats;
