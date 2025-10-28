@@ -7,12 +7,15 @@ endif
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
 
-OBJS = $(OBJ_DIR)/main.o \
+OBJS = $(OBJ_DIR)/editing.o \
+		 $(OBJ_DIR)/gp_file.o \
 		 $(OBJ_DIR)/gp_read.o \
-		 $(OBJ_DIR)/gp_file.o
+		 $(OBJ_DIR)/gpedit.o \
+		 $(OBJ_DIR)/main.o \
+		 $(OBJ_DIR)/windows.o
 		 
 LIBS = -l$(CURSESLIB)
-CFLAGS = -O -Wall
+CFLAGS = -Wall
 EXEC = $(BUILD_DIR)/gpedit
 
 
@@ -31,6 +34,9 @@ $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(OBJ_DIR)
 	g++ $(CFLAGS) -c -o $@ $<
 
-$(OBJ_DIR)/main.o: main.cpp gp_file.hpp
-$(OBJ_DIR)/gp_read.o: gp_read.cpp gp_read.hpp
+$(OBJ_DIR)/editing.o: editing.cpp editing.hpp gpedit.hpp gp_file.hpp windows.hpp
 $(OBJ_DIR)/gp_file.o: gp_file.cpp gp_file.hpp gp_read.hpp
+$(OBJ_DIR)/gp_read.o: gp_read.cpp gp_read.hpp
+$(OBJ_DIR)/gpedit.: gpedit.cpp gpedit.hpp gp_file.hpp
+$(OBJ_DIR)/main.o: main.cpp gpedit.hpp windows.hpp editing.hpp
+$(OBJ_DIR)/windows.o: windows.cpp windows.hpp gpedit.hpp gp_file.hpp

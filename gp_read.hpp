@@ -1,3 +1,6 @@
+#ifndef GP_READ_H
+#define GP_READ_H
+
 #include <fstream>
 
 namespace gp_read
@@ -11,3 +14,5 @@ namespace gp_read
 	std::string read_intstring(std::ifstream &fileStream);
 	std::string read_intbytestring(std::ifstream &fileStream);
 };
+
+#endif // !GP_READ_H

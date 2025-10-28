@@ -1,8 +1,8 @@
+#ifndef GP_FILE_H
+#define GP_FILE_H
+
 #include <vector>
 #include <fstream>
-
-#include "gp_read.hpp"
-
 
 enum MeasureHeaderFlags {
 	gp_measure_keysig_numerator = 0x01,
@@ -281,6 +281,7 @@ class GPFile {
 		
 		std::vector<std::vector<Measure>> measures;	// measures[measureCount][trackCount]
 		
+		GPFile() { }
 		GPFile(std::ifstream &fileStream);
 		
 		int read_song(std::ifstream &fileStream);
@@ -299,3 +300,5 @@ class GPFile {
 		Bend read_bend(std::ifstream &fileStream);
 		GraceNote read_grace_note(std::ifstream &fileStream);
 };
+
+#endif // !GP_FILE_H
