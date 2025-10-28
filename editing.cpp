@@ -340,14 +340,14 @@ void editTab() {
 				}
 				else if (startingBeat < song.measures[startingMeasure][trackIndex].beatCount-1) {
 					startingBeat++;
-					selectionIndex = displayedBeats.size()-1;
 					displayedBeats = printBeats(startingMeasure, startingBeat);
+					selectionIndex = displayedBeats.size()-1;
 				}
 				else if (startingMeasure < song.measureCount-2) {
 					startingMeasure++;
 					startingBeat = 0;
-					selectionIndex = displayedBeats.size()-1;
 					displayedBeats = printBeats(startingMeasure, startingBeat);
+					selectionIndex = displayedBeats.size()-1;
 				}
 				break;
 			case KEY_UP:
@@ -372,6 +372,9 @@ void editTab() {
 				if (startingMeasure < song.measureCount-2) {
 					startingMeasure++;
 					displayedBeats = printBeats(startingMeasure, 0);
+					if (selectionIndex > displayedBeats.size()-1) {
+						selectionIndex = displayedBeats.size()-1;
+					}
 				}
 				break;
 		}
