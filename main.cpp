@@ -8,7 +8,7 @@
 	#include <ncurses.h>
 #endif
 
-#include "GPFile.hpp"
+#include "gp_file.hpp"
 
 
 struct DisplayedBeat {
