@@ -172,6 +172,9 @@ Beat GPFile::read_beat(std::ifstream &fileStream) {
 	if (beat.beatFlags & gp_beat_is_empty_or_rest) {
 		beat.isRest = gp_read::read_bool(fileStream);
 	}
+	else {
+		beat.isRest = 0;
+	}
 	
 	beat.duration = (NoteDuration)gp_read::read_signedbyte(fileStream);
 	
