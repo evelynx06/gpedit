@@ -143,6 +143,11 @@ std::vector<DisplayedBeat> printBeats(int startingMeasure = 0, int startingBeat 
 					beatWidth++;
 				}
 				
+				if (note.noteFlags & gp_note_is_heavy_accent) {
+					wprintw(tabDisplayWindow, "t^");
+					beatWidth++;
+				}
+				
 				if (beat.beatFlags & gp_beat_has_effects) {
 					if (beat.effects.beatEffectFlags & gp_beatfx_vibrato) {
 						wprintw(tabDisplayWindow, "~");
@@ -155,9 +160,23 @@ std::vector<DisplayedBeat> printBeats(int startingMeasure = 0, int startingBeat 
 					}
 					
 					if (beat.effects.beatEffectFlags & gp_beatfx_tremolo_or_tap) {
-						if (beat.effects.tremoloOrTap == 1) {	// tap
-							wprintw(tabDisplayWindow, "t");
-							beatWidth++;
+						switch (beat.effects.tremoloOrTap) {
+							case 0:	// tremolo bar
+								wprintw(tabDisplayWindow, "v");
+								beatWidth++;
+								break;
+							case 1:	// tap
+								wprintw(tabDisplayWindow, "t");
+								beatWidth++;
+								break;
+							case 2:	// slap
+								wprintw(tabDisplayWindow, "s");
+								beatWidth++;
+								break;
+							case 3:	// pop
+								wprintw(tabDisplayWindow, "P");
+								beatWidth++;
+								break;
 						}
 					}
 				}
@@ -313,7 +332,7 @@ void editTab() {
 		
 		Beat beat = song.measures[selectedBeat.measureIndex][trackIndex].beats[selectedBeat.beatIndex];
 		
-		printBeatInfo(selectedBeat.measureIndex, selectedBeat.beatIndex, beat.isRest);
+		printBeatInfo(selectedBeat, stringIndex);
 		
 		keyboardInput = wgetch(tabDisplayWindow);
 		

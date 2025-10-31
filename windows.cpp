@@ -1,3 +1,4 @@
+#include "editing.hpp"
 #include <vector>
 
 #ifdef _WIN32
@@ -122,10 +123,40 @@ void initTabDisplay() {
 	wrefresh(beatInfoWindow);
 }
 
-void printBeatInfo(int measureIndex, int beatIndex, bool isRest) {
-	mvwprintw(beatInfoWindow, 1, 1, "Measure: %d  ", measureIndex+1);
-	mvwprintw(beatInfoWindow, 2, 1, "Beat: %d  ", beatIndex+1);
-	mvwprintw(beatInfoWindow, 3, 1, "Rest: %s   ", isRest ? "Yes" : "No");
-		
+void printBeatInfo(DisplayedBeat selectedBeat, int stringIndex) {
+	Beat beat = song.measures[selectedBeat.measureIndex][trackIndex].beats[selectedBeat.beatIndex];
+	Note note = beat.beatNotes.strings[stringIndex];
+	int line = 1;
+	
+	mvwprintw(beatInfoWindow, line++, 1, "Measure: %d\t\t", selectedBeat.measureIndex+1);
+	mvwprintw(beatInfoWindow, line++, 1, "Beat: %d\t\t", selectedBeat.beatIndex+1);
+	mvwprintw(beatInfoWindow, line++, 1, "Rest: %s\t\t", beat.isRest ? "Yes" : "No");
+	if (beat.beatFlags & gp_beat_has_chord) {
+		mvwprintw(beatInfoWindow, line++, 1, "Chord: %s\t\t", beat.chordDiagram.name.c_str());
+	}
+	if (beat.beatFlags & gp_beat_has_text) {
+		mvwprintw(beatInfoWindow, line++, 1, "Text: %s...\t\t", beat.text.substr(0,5).c_str());
+	}
+	if ((note.noteFlags & gp_note_has_effects) && (note.noteEffectFlags & gp_notefx_let_ring)) {
+		mvwprintw(beatInfoWindow, line++, 1, "Note effects:\t\t");
+		mvwprintw(beatInfoWindow, line++, 1, "\tLet ring\t\t");
+	}
+	
+	// next column
+	line = 1;
+	
+	if (beat.beatFlags & gp_beat_has_effects) {
+		mvwprintw(beatInfoWindow, line++, 16, "Beat effects:\t\t");
+		if (beat.effects.beatEffectFlags & gp_beatfx_fade_in) {
+			mvwprintw(beatInfoWindow, line++, 16, "\tFade in\t\t");
+		}
+		if ((beat.effects.beatEffectFlags & gp_beatfx_tremolo_or_tap) && beat.effects.tremoloOrTap == 0) {
+			mvwprintw(beatInfoWindow, line++, 16, "\tTrem. bar (%d st)\t\t", int(beat.effects.tremoloValue / 50));
+		}
+		if (beat.effects.beatEffectFlags & gp_beatfx_strum) {
+			mvwprintw(beatInfoWindow, line++, 16, "\tStrum: %s\t\t", beat.effects.strumDown > 0 ? "Down" : beat.effects.strumUp > 0 ? "Up" : "None");
+		}
+	}
+	
 	wrefresh(beatInfoWindow);
 }

@@ -1,6 +1,7 @@
 #ifndef WINDOWS_H
 #define WINDOWS_H
 
+#include "editing.hpp"
 #ifdef _WIN32
 	#include <curses.h>
 #else
@@ -14,6 +15,6 @@ extern WINDOW* beatInfoWindow;
 void displaySongInfo();
 void selectTrack();
 void initTabDisplay();
-void printBeatInfo(int measureIndex, int beatIndex, bool isRest);
+void printBeatInfo(DisplayedBeat selectedBeat, int stringIndex);
 
 #endif // !WINDOWS_H
