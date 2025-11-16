@@ -113,10 +113,10 @@ void initTabDisplay() {
 	
 	// create beat info window
 	beatInfoWindow = newwin(11, getmaxx(stdscr)/2, yTop+tabWindowHeight, 0);
-	box(beatInfoWindow, 0, 0);
-	wattron(beatInfoWindow, A_REVERSE);
-	wprintw(beatInfoWindow, "Beat Info");
-	wattroff(beatInfoWindow, A_REVERSE);
+	// box(beatInfoWindow, 0, 0);
+	// wattron(beatInfoWindow, A_REVERSE);
+	// wprintw(beatInfoWindow, "Beat Info");
+	// wattroff(beatInfoWindow, A_REVERSE);
 	
 	refresh();
 	wrefresh(tabDisplayWindow);
@@ -126,35 +126,76 @@ void initTabDisplay() {
 void printBeatInfo(DisplayedBeat selectedBeat, int stringIndex) {
 	Beat beat = song.measures[selectedBeat.measureIndex][trackIndex].beats[selectedBeat.beatIndex];
 	Note note = beat.beatNotes.strings[stringIndex];
-	int line = 1;
+	int line = 0;
 	
-	mvwprintw(beatInfoWindow, line++, 1, "Measure: %d\t\t", selectedBeat.measureIndex+1);
-	mvwprintw(beatInfoWindow, line++, 1, "Beat: %d\t\t", selectedBeat.beatIndex+1);
-	mvwprintw(beatInfoWindow, line++, 1, "Rest: %s\t\t", beat.isRest ? "Yes" : "No");
+	wclear(beatInfoWindow);
+	
+	mvwprintw(beatInfoWindow, line++, 1, "Measure: %d", selectedBeat.measureIndex+1);
+	mvwprintw(beatInfoWindow, line++, 1, "Beat: %d", selectedBeat.beatIndex+1);
+	mvwprintw(beatInfoWindow, line++, 1, "Rest: %s", beat.isRest ? "Yes" : "No");
+	
+	std::string duration;
+	switch (beat.duration) {
+		case gp_duration_whole:
+		duration = "1/1";
+		break;
+		case gp_duration_half:
+		duration = "1/2";
+		break;
+		case gp_duration_quarter:
+		duration = "1/4";
+		break;
+		case gp_duration_eighth:
+		duration = "1/8";
+		break;
+		case gp_duration_sixteenth:
+		duration = "1/16";
+		break;
+		case gp_duration_thirty_second:
+		duration = "1/32";
+		break;
+		case gp_duration_sixty_fourth:
+		duration = "1/64";
+		break;
+	}
+	mvwprintw(beatInfoWindow, line++, 1, "Duration: %s%s", duration.c_str(), (beat.beatFlags & gp_beat_is_dotted) ? "." : "");
+	if (beat.beatFlags & gp_beat_is_tuplet) {
+		mvwprintw(beatInfoWindow, line++, 1, "Tuplet: %d", beat.tupletDivision);
+	}
+	
+	
+	
+	
+	
 	if (beat.beatFlags & gp_beat_has_chord) {
-		mvwprintw(beatInfoWindow, line++, 1, "Chord: %s\t\t", beat.chordDiagram.name.c_str());
+		mvwprintw(beatInfoWindow, line++, 1, "Chord: %s", beat.chordDiagram.name.c_str());
 	}
 	if (beat.beatFlags & gp_beat_has_text) {
-		mvwprintw(beatInfoWindow, line++, 1, "Text: %s...\t\t", beat.text.substr(0,5).c_str());
+		mvwprintw(beatInfoWindow, line++, 1, "Text: %s...", beat.text.substr(0,5).c_str());
 	}
+	
+	
+	// next column
+	line = 0;
+	
 	if ((note.noteFlags & gp_note_has_effects) && (note.noteEffectFlags & gp_notefx_let_ring)) {
-		mvwprintw(beatInfoWindow, line++, 1, "Note effects:\t\t");
-		mvwprintw(beatInfoWindow, line++, 1, "\tLet ring\t\t");
+		mvwprintw(beatInfoWindow, line++, 16, "Note effects:");
+		mvwprintw(beatInfoWindow, line++, 16, "\tLet ring");
 	}
 	
 	// next column
-	line = 1;
+	line = 0;
 	
 	if (beat.beatFlags & gp_beat_has_effects) {
-		mvwprintw(beatInfoWindow, line++, 16, "Beat effects:\t\t");
+		mvwprintw(beatInfoWindow, line++, 32, "Beat effects:");
 		if (beat.effects.beatEffectFlags & gp_beatfx_fade_in) {
-			mvwprintw(beatInfoWindow, line++, 16, "\tFade in\t\t");
+			mvwprintw(beatInfoWindow, line++, 32, "\tFade in");
 		}
 		if ((beat.effects.beatEffectFlags & gp_beatfx_tremolo_or_tap) && beat.effects.tremoloOrTap == 0) {
-			mvwprintw(beatInfoWindow, line++, 16, "\tTrem. bar (%d st)\t\t", int(beat.effects.tremoloValue / 50));
+			mvwprintw(beatInfoWindow, line++, 32, "\tTrem. bar (%d st)", int(beat.effects.tremoloValue / 50));
 		}
 		if (beat.effects.beatEffectFlags & gp_beatfx_strum) {
-			mvwprintw(beatInfoWindow, line++, 16, "\tStrum: %s\t\t", beat.effects.strumDown > 0 ? "Down" : beat.effects.strumUp > 0 ? "Up" : "None");
+			mvwprintw(beatInfoWindow, line++, 32, "\tStrum: %s", beat.effects.strumDown > 0 ? "Down" : beat.effects.strumUp > 0 ? "Up" : "None");
 		}
 	}
 	
