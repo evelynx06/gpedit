@@ -125,7 +125,6 @@ void initTabDisplay() {
 
 void printBeatInfo(DisplayedBeat selectedBeat, int stringIndex) {
 	Beat beat = song.measures[selectedBeat.measureIndex][trackIndex].beats[selectedBeat.beatIndex];
-	Note note = beat.beatNotes.strings[stringIndex];
 	int line = 0;
 	
 	wclear(beatInfoWindow);
@@ -175,27 +174,99 @@ void printBeatInfo(DisplayedBeat selectedBeat, int stringIndex) {
 	}
 	
 	
-	// next column
-	line = 0;
 	
-	if ((note.noteFlags & gp_note_has_effects) && (note.noteEffectFlags & gp_notefx_let_ring)) {
-		mvwprintw(beatInfoWindow, line++, 16, "Note effects:");
-		mvwprintw(beatInfoWindow, line++, 16, "\tLet ring");
+	if (beat.beatNotes.stringsPlayed & (0x40 >> stringIndex)) {	// check if string is played
+		Note note = beat.beatNotes.strings[stringIndex];
+		
+		// next column
+		line = 0;
+		
+		if (note.noteFlags & gp_note_has_fret) {
+			std::string noteType;
+			switch (note.noteType) {
+				case gp_notetype_normal:
+					noteType = "normal";
+					break;
+				case gp_notetype_tied:
+					noteType = "tied";
+					break;
+				case gp_notetype_dead:
+					noteType = "dead";
+					break;
+			}
+			mvwprintw(beatInfoWindow, line++, 16, "Note type: %s", noteType.c_str());
+		}
+		if (note.noteFlags & gp_note_is_ghost) {
+			mvwprintw(beatInfoWindow, line++, 16, "Ghost note");
+		}
+		
+		if (note.noteFlags & gp_note_has_effects) {
+			mvwprintw(beatInfoWindow, line++, 16, "Note effects:");
+			
+			if (note.noteEffectFlags & gp_notefx_bend) {
+				std::string bendType;
+				switch (note.noteBend.type) {
+					case gp_bendtype_none:
+					bendType = "NONE";
+					break;
+					case gp_bendtype_bend:
+					bendType = "b";
+					break;
+					case gp_bendtype_bend_release:
+					bendType = "br";
+					break;
+					case gp_bendtype_bend_release_bend:
+					bendType = "brb";
+					break;
+					case gp_bendtype_prebend:
+					bendType = "pb";
+					break;
+					case gp_bendtype_prebend_release:
+					bendType = "pbr";
+					break;
+				}
+				mvwprintw(beatInfoWindow, line++, 16, "\tBend: %s", bendType.c_str());
+			}
+			if (note.noteEffectFlags & gp_notefx_hammer_pull) {
+				mvwprintw(beatInfoWindow, line++, 16, "\tHammer/Pull");
+			}
+			if (note.noteEffectFlags & gp_notefx_slide) {
+				mvwprintw(beatInfoWindow, line++, 16, "\tSlide");
+			}
+			if (note.noteEffectFlags & gp_notefx_let_ring) {
+				mvwprintw(beatInfoWindow, line++, 16, "\tLet ring");
+			}
+			if (note.noteEffectFlags & gp_notefx_grace_note) {
+				mvwprintw(beatInfoWindow, line++, 16, "\tGrace note");
+			}
+		}
 	}
 	
 	// next column
 	line = 0;
 	
 	if (beat.beatFlags & gp_beat_has_effects) {
-		mvwprintw(beatInfoWindow, line++, 32, "Beat effects:");
+		mvwprintw(beatInfoWindow, line++, 36, "Beat effects:");
+		if (beat.effects.beatEffectFlags & gp_beatfx_vibrato) {
+			mvwprintw(beatInfoWindow, line++, 36, "\tVibrato");
+		}
+		if (beat.effects.beatEffectFlags & gp_beatfx_wide_vibrato) {
+			mvwprintw(beatInfoWindow, line++, 36, "\tWide vibrato");
+		}
+		if (beat.effects.beatEffectFlags & gp_beatfx_natural_harmonic) {
+			mvwprintw(beatInfoWindow, line++, 36, "\tNat. harmonic");
+		}
+		if (beat.effects.beatEffectFlags & gp_beatfx_artificial_harmonic) {
+			mvwprintw(beatInfoWindow, line++, 36, "\tArt. harmonic");
+		}
 		if (beat.effects.beatEffectFlags & gp_beatfx_fade_in) {
-			mvwprintw(beatInfoWindow, line++, 32, "\tFade in");
+			mvwprintw(beatInfoWindow, line++, 36, "\tFade in");
 		}
 		if ((beat.effects.beatEffectFlags & gp_beatfx_tremolo_or_tap) && beat.effects.tremoloOrTap == 0) {
-			mvwprintw(beatInfoWindow, line++, 32, "\tTrem. bar (%d st)", int(beat.effects.tremoloValue / 50));
+			mvwprintw(beatInfoWindow, line++, 36, "\tTrem. bar (%d st)", int(beat.effects.tremoloValue / 50));
 		}
 		if (beat.effects.beatEffectFlags & gp_beatfx_strum) {
-			mvwprintw(beatInfoWindow, line++, 32, "\tStrum: %s", beat.effects.strumDown > 0 ? "Down" : beat.effects.strumUp > 0 ? "Up" : "None");
+			mvwprintw(beatInfoWindow, line++, 36, "\tStrum: %s", beat.effects.strumDown > 0 ? "Down" : beat.effects.strumUp > 0 ? "Up" : "None");
 		}
 	}
 	

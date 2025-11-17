@@ -86,12 +86,12 @@ enum BendType {
 	gp_bendtype_prebend = 4,
 	gp_bendtype_prebend_release = 5,
 	// following are for tremolo bar only, and actually not part of the gp3 spec
-	gp_bendtype_dip = 6,
-	gp_bendtype_dive = 7,
-	gp_bendtype_release_up = 8,
-	gp_bendtype_inverted_dip = 9,
-	gp_bendtype_return = 10,
-	gp_bendtype_release_down = 11
+	// gp_bendtype_dip = 6,
+	// gp_bendtype_dive = 7,
+	// gp_bendtype_release_up = 8,
+	// gp_bendtype_inverted_dip = 9,
+	// gp_bendtype_return = 10,
+	// gp_bendtype_release_down = 11
 };
 
 struct MidiChannel {
