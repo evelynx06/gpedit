@@ -1,0 +1,38 @@
+Försättsblad
+	Titel
+	Namn
+
+Inehållsförteckning
+	Förteckning över innehåll
+
+Abstract (aka inledning-ish fast på engelska)
+
+Inledning
+	Text som introducerar texten
+--> Syfte och frågeställning
+		Öva på att programmera ett program med faktisk funktion och användning.
+		Hur går man till väga för att skapa ett textbaserat program som kan öppna och visa filer med gitarrtabulatur?
+
+Bakgrund
+	Utvecklingsmiljö
+	Programmeringsspråk
+	Gitarrtabulatur
+	Filformat
+
+Metod
+	Söka information om filformatet
+	Bygga upp datastrukturen för en fil i programmet
+	Skapa ett gränssnitt
+	Visa informationen från en fil i gränssnittet
+
+Resultat
+	Söka information om filformatet
+	Bygga upp datastrukturen för en fil i programmet
+	Skapa ett gränssnitt
+	Visa informationen från en fil i gränssnittet
+
+Diskussion
+	Självkritik, reflektion, osv, osv
+
+Källförteckning
+	Källor
