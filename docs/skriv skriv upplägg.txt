@@ -5,7 +5,7 @@ Försättsblad
 Inehållsförteckning
 	Förteckning över innehåll
 
-Abstract (aka inledning-ish fast på engelska)
+Abstract (aka sammanfattning fast på engelska)
 
 Inledning
 	Text som introducerar texten
