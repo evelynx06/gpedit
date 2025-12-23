@@ -26,7 +26,7 @@ std::vector<DisplayedBeat> printBeats(int startingMeasure = 0, int startingBeat 
 	int leftMargin = 1;
 	int rightMargin = 2;
 	int topMargin = 3;
-	int bottomMargin = 1;
+	// int bottomMargin = 1;
 	
 	// print string names
 	std::string stringBeginning;
@@ -353,7 +353,7 @@ void editTab() {
 				}
 				break;
 			case KEY_RIGHT:
-				if (selectionIndex < displayedBeats.size() - 1) {
+				if ((unsigned int)selectionIndex < displayedBeats.size() - 1) {
 					mvwprintw(tabDisplayWindow, stringIndex+3, selectedBeat.beatOffset, "%s", selection);
 					selectionIndex++;
 				}
@@ -391,7 +391,7 @@ void editTab() {
 				if (startingMeasure < song.measureCount-2) {
 					startingMeasure++;
 					displayedBeats = printBeats(startingMeasure, 0);
-					if (selectionIndex > displayedBeats.size()-1) {
+					if ((unsigned int)selectionIndex > displayedBeats.size()-1) {
 						selectionIndex = displayedBeats.size()-1;
 					}
 				}
